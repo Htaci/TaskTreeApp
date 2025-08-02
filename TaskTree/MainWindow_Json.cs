@@ -16,6 +16,10 @@ using Path = System.IO.Path;
 
 namespace TaskTree
 {
+    //public class TaskData
+    //{
+
+    //}
     public partial class MainWindow : Window
     {
         /// <summary>

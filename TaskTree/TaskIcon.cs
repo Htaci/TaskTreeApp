@@ -138,10 +138,11 @@ namespace TaskTree
                 }
 
 
-                if (TaskSerial >= 0 && !MainWindow.instance.isConnectionStatus)
+                if (!MainWindow.instance.isConnectionStatus)
                 {
                     TaskData taskData = MainWindow.instance.jsonData.Tasks[TaskSerial];
                     //MainWindow.instance.OpenTaskPlanel(taskData);
+                    Debug.WriteLine($"任务ID：{TaskSerial} 触发任务：打开任务面板");
                     MainWindow.instance.OpenTaskPlanel(TaskSerial);
                 }
 

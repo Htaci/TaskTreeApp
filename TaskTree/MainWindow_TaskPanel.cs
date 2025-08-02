@@ -228,7 +228,7 @@ namespace TaskTree
             {
                 foreach (var b in jsonData.Tasks[a.Key].TaskTargetLine)
                 {
-                    DirectionLine line = new DirectionLine(jsonData.Tasks[b], jsonData.Tasks[a.Key]);
+                    DirectionLine line = new DirectionLine(jsonData.Tasks[a.Key], jsonData.Tasks[b]);
                     jsonData.Tasks[a.Key].taskIcon.directionLines.Add(line);
                     jsonData.Tasks[b].taskIcon.directionLines.Add(line);
                 }
