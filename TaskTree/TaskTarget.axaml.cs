@@ -19,12 +19,12 @@ public partial class TaskTarget : UserControl
     // 完成/取消 按钮
     private void Click_Submit(object? sender, RoutedEventArgs e)
     {
-        MainWindow.instance.OpenTargetPlane(ListSerial);
+        TaskTreePanel.instance.OpenTargetPlane(ListSerial);
     }
     // 删除 按钮
     private void Click_Del (object? sender, RoutedEventArgs e)
     {
-        MainWindow.instance.OpenTargetDelPlane(ListSerial);
+        TaskTreePanel.instance.OpenTargetDelPlane(ListSerial);
     }
 
     // 加载完成后的初始化
@@ -32,9 +32,9 @@ public partial class TaskTarget : UserControl
     {
         ListSerial = (int)TaskTargetTag.Tag;
         //MainWindow.instance.OpenTaskSerial
-        Name1.Text = MainWindow.instance.jsonData.Tasks[MainWindow.instance.OpenTaskSerial].TaskTarget[ListSerial].Target;
+        Name1.Text = TaskTreePanel.instance.jsonData.Tasks[TaskTreePanel.instance.OpenTaskSerial].TaskTarget[ListSerial].Target;
         
-        if (MainWindow.instance.jsonData.Tasks[MainWindow.instance.OpenTaskSerial].TaskTarget[ListSerial].IsComplete)
+        if (TaskTreePanel.instance.jsonData.Tasks[TaskTreePanel.instance.OpenTaskSerial].TaskTarget[ListSerial].IsComplete)
         {
             Taskbool1.Content = "取消";
             Taskbool1.Foreground = new SolidColorBrush(Colors.Red);
@@ -45,7 +45,7 @@ public partial class TaskTarget : UserControl
             Taskbool1.Foreground = new SolidColorBrush(Colors.Green);
         }
 
-        if (MainWindow.instance.EditMode)
+        if (TaskTreePanel.instance.EditMode)
         {
             Taskbool1.Content = "修改";
             Taskbool1.Foreground = new SolidColorBrush(Colors.Green);

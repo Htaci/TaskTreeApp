@@ -1,0 +1,49 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="TaskTree.SettingsWindow"
+		TransparencyLevelHint="Mica"
+        Title="SettingsWindow"
+		Width="920" Height="550"
+		MinWidth="920" MinHeight="550"
+		WindowStartupLocation="CenterScreen">
+	<Window.Styles>
+		<!-- 定义无边窗口 -->
+		<Style Selector="Window">
+			<Setter Property="ExtendClientAreaToDecorationsHint" Value="true"></Setter>
+			<Setter Property="ExtendClientAreaChromeHints" Value="NoChrome"></Setter>
+			<!-- NoChrome -->
+			<Setter Property="ExtendClientAreaTitleBarHeightHint" Value="45"></Setter>
+			<Setter Property="SystemDecorations" Value="Full"></Setter>
+			<Setter Property="CanResize" Value="True"></Setter>
+			<Setter Property="Background">
+				<Setter.Value>
+					<SolidColorBrush Color="Transparent" Opacity="1"></SolidColorBrush>
+				</Setter.Value>
+			</Setter>
+			<Setter Property="RequestedThemeVariant" Value="Dark"></Setter>
+		</Style>
+	</Window.Styles>
+
+
+	<!-- 标题栏 -->
+	<Border Height="45" Background="Gray" VerticalAlignment="Top"
+	HorizontalAlignment="Stretch"
+	BorderThickness="0,0,0,1"
+	BorderBrush="Gray"
+	PointerPressed="Form_OnDrag">
+		<Grid>
+			<TextBlock Text="设置" FontSize="18"
+					   FontWeight="Bold"
+					   Margin="0,0,0,0" HorizontalAlignment="Center"
+							 VerticalAlignment="Center">
+			</TextBlock>
+			<Button x:Name="Close" Classes="red" Content="&#xe8bb;" Background="Transparent" HorizontalAlignment="Right" VerticalAlignment="Top" FontFamily="Segoe Fluent Icons" Width="40" Height="35" Margin="0,5,5,0" />
+			<Button x:Name="Maximize" Content="&#xe922;" FontSize="16" Background="Transparent" FontFamily="Segoe Fluent Icons" HorizontalAlignment="Right" VerticalAlignment="Top" Width="42" Height="35" Margin="0,5,46,0"/>
+			<Button x:Name="Minimize" Content="&#xe921;" Background="Transparent" FontFamily="Segoe Fluent Icons" HorizontalAlignment="Right" VerticalAlignment="Top" Width="40" Height="35" Margin="0,5,88,0"/>
+
+		</Grid>
+	</Border>
+</Window>

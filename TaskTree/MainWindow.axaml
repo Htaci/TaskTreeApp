@@ -8,7 +8,8 @@
         Title="任务树"
 		TransparencyLevelHint="Mica"
 		Width="920" Height="550"
-		MinWidth="920" MinHeight="550">
+		MinWidth="920" MinHeight="550"
+		WindowStartupLocation="CenterScreen">
 	
 	<Window.Styles>
 		<!-- 定义无边窗口 -->
@@ -30,141 +31,7 @@
 
 	<Grid>
 
-		<Border Background="Transparent" BorderThickness="0" BorderBrush="Blue" CornerRadius="8"               
-			  PointerPressed="Form_OnDragStart"
-              PointerMoved="Form_OnDragMove"
-              PointerReleased="Form_OnDragEnd" Margin="0,50,0,0">
-			<Grid x:Name="MainPanel">
-				<!--<Button x:Name="Theme" Content="&#xe921;" Background="Transparent" FontFamily="Segoe Fluent Icons" HorizontalAlignment="Right" VerticalAlignment="Top" Width="40" Height="35" Margin="0,0,125,0"/> -->
-				<HyperlinkButton Content="&#xE700;" FontFamily="Segoe Fluent Icons" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="10">
-					<HyperlinkButton.Flyout>
-						<MenuFlyout Placement="Top">
-							<MenuItem Header="连接任务"/>
-							<MenuItem Header="删除任务"/>
-							<MenuItem Header="设置"/>
-						</MenuFlyout>
-					</HyperlinkButton.Flyout>
-				</HyperlinkButton>
-
-				<!-- 指向线 -->
-				<Grid  x:Name="DirectionLinePanel" HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="0,0,0,0">
-					
-				</Grid>
-				<!-- 任务树 -->
-				<Grid x:Name="TaskTreePanel" HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="0,0,0,0">
-					
-				</Grid>
-
-			</Grid>
-		</Border>
-		<!-- 任务卡片的背景 -->
-		<Grid x:Name="TaskPanelBackground" IsVisible="False" Background="Black" Opacity="0.9" Margin="0,45,0,0"/>
-		
-
-		<!-- 任务卡片 -->
-		<Border Background="Gray"
-				BorderThickness="2"
-				BorderBrush="LightGray"
-				CornerRadius="4"
-				HorizontalAlignment="Center"
-				VerticalAlignment="Center"
-				x:Name="TaskPanel"
-				IsVisible="False">
-			<DockPanel>
-				<Line IsVisible="False" x:Name="Line1" StartPoint="0,30" EndPoint="230,30" Stroke="Black" StrokeThickness="2"/>
-				<Line IsVisible="False" x:Name="Line2" StartPoint="0,90" EndPoint="230,90" Stroke="Black" StrokeThickness="2"/>
-				<Border  Height="30" DockPanel.Dock="Top"
-							CornerRadius="3,3,0,0"
-							BorderThickness="0,0,0,2"
-							BorderBrush="LightGray">
-					<Grid>
-						<HyperlinkButton Classes="red" Content="&#xe8bb;" Background="Transparent" HorizontalAlignment="Right" VerticalAlignment="Top" FontFamily="Segoe Fluent Icons" Margin="0,6,5,0"
-											Click="Click_TaskPanelClose"/>
-						<HyperlinkButton x:Name="Edit_TaskPanelButton" Classes="red" Content="&#xe70f;" Background="Transparent" HorizontalAlignment="Right" VerticalAlignment="Top" FontFamily="Segoe Fluent Icons" Margin="0,6,30,0"
-											Click="Click_TaskPanelEdit" Foreground="Black"/>
-						<TextBlock x:Name="TaskPanelTitle"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
-						<HyperlinkButton x:Name="TaskPanelTitle_Edit" IsVisible="False"  HorizontalAlignment="Center" VerticalAlignment="Center" Click="Edit_TaskTitle"/>
-					</Grid>
-				</Border>
-
-				<Border DockPanel.Dock="Bottom"
-						BorderBrush="LightGray"
-						BorderThickness="0,2,0,0">
-					<TextBlock Margin="0,0,0,0">
-						<Run Text="普通文本" />
-						<Run Text="红色加粗文本" Foreground="Red" FontWeight="Bold" />
-						<Run Text="蓝色斜体文本" Foreground="Blue" FontStyle="Italic" />
-					</TextBlock>
-				</Border>
-				<Border BorderBrush="LightGray">
-					<Grid Margin="0,0,0,10">
-						<TextBlock Text="目标" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,2,0,5"/>
-						<StackPanel VerticalAlignment="Top" x:Name="TaskTargetPanel" Margin="0,30,0,10">
-								
-						</StackPanel>
-						<HyperlinkButton x:Name="New_TaskTarget" 
-										 IsVisible="False"
-										 VerticalAlignment="Bottom"
-										 HorizontalAlignment="Center"
-										 Content="新建任务条"
-										 Margin="0,0,0,-5"
-										 Click="Edit_NewTaskTarget"/>
-					</Grid>
-				</Border>
-
-			</DockPanel>
-		</Border>
-
-
-		<!-- 任务条目完成的确认弹窗 -->
-		<Border Background="Gray"
-				BorderThickness="2"
-				BorderBrush="LightGray"
-				CornerRadius="4"
-				Width="200" Height="100"
-				IsVisible="False"
-				x:Name="SubmitConfirmation">
-			<Grid>
-				<TextBlock Text="确定要这样做吗" HorizontalAlignment="Center" Margin="0,20"/>
-				<Button Content="取消"  HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="97" Click="Click_TaskSubmitConfirmationA"/>
-				<Button Content="确定" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="97" Click="Click_TaskSubmitConfirmationB"/>
-			</Grid>
-		</Border>
-		<!-- 任务标题编辑弹窗 -->
-		<Border Background="Gray"
-				BorderThickness="2"
-				BorderBrush="LightGray"
-				CornerRadius="4"
-				HorizontalAlignment="Center"
-				VerticalAlignment="Center"
-				x:Name="Edit_TaskTitlePanel"
-				IsVisible="False"
-				Width="200" Height="110">
-			<Grid>
-				<TextBlock Text="编辑任务标题" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,5"/>
-				<TextBox x:Name="Edit_TaskTitleTextBox" Watermark="" VerticalAlignment="Center" Margin="5,-10,5,0"/>
-				<Button Content="取消"  HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="97" Click="Edit_TaskTitle1"/>
-				<Button Content="确定" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="97" Click="Edit_TaskTitle2"/>
-			</Grid>
-		</Border>
-		
-		<!-- 任务条目编辑/添加弹窗 -->
-		<Border Background="Gray"
-		BorderThickness="2"
-		BorderBrush="LightGray"
-		CornerRadius="4"
-		HorizontalAlignment="Center"
-		VerticalAlignment="Center"
-		x:Name="Edit_TaskTargetPanel"
-		IsVisible="False"
-		Width="200" Height="110">
-			<Grid>
-				<TextBlock Text="编辑任务条目" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,5"/>
-				<TextBox x:Name="Edit_TaskTargetTextBox" Watermark="" VerticalAlignment="Center" Margin="5,-10,5,0"/>
-				<Button Content="取消"  HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="97" Click="Edit_TaskTarget1"/>
-				<Button Content="确定" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="97" Click="Edit_TaskTarget2"/>
-			</Grid>
-		</Border>
+		<cc:TaskTreePanel></cc:TaskTreePanel>
 		
 		<!-- 标题栏 -->
 		<Border Height="45" Background="Gray" VerticalAlignment="Top"
@@ -175,18 +42,23 @@
 			<Grid>
 				<HyperlinkButton Content="MainPanel" FontSize="18" Margin="0,0,0,0" HorizontalAlignment="Center"
 								 VerticalAlignment="Center">
-					<HyperlinkButton.Flyout>
-						<MenuFlyout Placement="Bottom">
-							<MenuItem Header="支线"/>
-							<MenuItem Header="检查客户端更新" />
-							<MenuItem Header="设置" />
-						</MenuFlyout>
-					</HyperlinkButton.Flyout>
+
 				</HyperlinkButton>
-				<Button x:Name="Close" Classes="red" Content="&#xe8bb;" Background="Transparent" HorizontalAlignment="Right" VerticalAlignment="Top" FontFamily="Segoe Fluent Icons" Width="40" Height="35" Margin="0,5,5,0"/>
+				<Button x:Name="Close" Classes="red" Content="&#xe8bb;" Background="Transparent" HorizontalAlignment="Right" VerticalAlignment="Top" FontFamily="Segoe Fluent Icons" Width="40" Height="35" Margin="0,5,5,0" />
 				<Button x:Name="Maximize" Content="&#xe922;" FontSize="16" Background="Transparent" FontFamily="Segoe Fluent Icons" HorizontalAlignment="Right" VerticalAlignment="Top" Width="42" Height="35" Margin="0,5,46,0"/>
 				<Button x:Name="Minimize" Content="&#xe921;" Background="Transparent" FontFamily="Segoe Fluent Icons" HorizontalAlignment="Right" VerticalAlignment="Top" Width="40" Height="35" Margin="0,5,88,0"/>
-				<Button x:Name="Refresh" Content="&#xe72C;" Background="Transparent" FontFamily="Segoe Fluent Icons" HorizontalAlignment="Right" VerticalAlignment="Top" Width="40" Height="35" Margin="0,5,128,0"/>
+				<Button x:Name="Refresh" 
+						Content="&#xe72C;" 
+						Background="Transparent" 
+						FontFamily="Segoe Fluent Icons" 
+						HorizontalAlignment="Right" 
+						VerticalAlignment="Top" 
+						Width="40" Height="35" 
+						Margin="0,5,128,0" 
+						IsTabStop="False"
+						IsDefault="False"
+						IsCancel="False"
+						Focusable="False"/>
 			</Grid>
 		</Border>
 	</Grid>

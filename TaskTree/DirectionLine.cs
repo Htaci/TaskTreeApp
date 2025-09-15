@@ -21,7 +21,7 @@ namespace TaskTree
 
         private DispatcherTimer _timer;
         private double _frameInterval;
-        double frameRate = 180;
+        double frameRate = 60;
 
         public TaskData start;
         public TaskData end;
@@ -162,7 +162,7 @@ namespace TaskTree
                 grid.Children.Add(Line2);
             }
             // 把指向线添加到 指向线容器(Grid)
-            MainWindow.instance?.DirectionLinePanel.Children.Add(Border);
+            TaskTreePanel.instance?.DirectionLineGrid.Children.Add(Border);
 
 
             gridTest = grid;
@@ -177,7 +177,7 @@ namespace TaskTree
             if (gridTest != null && gridTest.Parent is Border border)
             {
                 // 从 TaskTreePanel 中移除指向线
-                MainWindow.instance?.DirectionLinePanel.Children.Remove(border);
+                TaskTreePanel.instance?.DirectionLineGrid.Children.Remove(border);
             }
 
             // 停止动画
@@ -189,17 +189,6 @@ namespace TaskTree
         public void RemoveDirectionLineFromData()
         {
             // 因为指向线是在开始任务中记录的，所以检索开始任务的指向线列表
-            //for (int s ; start.TaskTargetLine)
-            //{
-            //    //Debug.WriteLine($"删除指向线，开始点(任务编号)：{s}，结束点(任务编号)：{end.TaskSerial}");
-            //    //Debug.WriteLine($"数据结束点(任务编号)：{s}，指向线结束点(任务编号)：{end.TaskSerial}");
-            //    if (s == end.TaskSerial)
-            //    {
-            //        Debug.WriteLine($"满足条件，指向线{start.TaskSerial} -> {end.TaskSerial}被删除");
-            //        // 删除该对象
-            //        start.TaskTargetLine.Remove(s);
-            //    }
-            //}
             for (int i = start.TaskTargetLine.Count - 1; i >= 0; i--)
             {
                 if (start.TaskTargetLine[i] == end.TaskSerial)

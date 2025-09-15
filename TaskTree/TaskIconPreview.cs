@@ -110,9 +110,9 @@ namespace TaskTree
 
 
             // 将 Border 添加到任务图
-            MainWindow.instance?.TaskTreePanel.Children.Add(border);
-            MainWindow.instance?.TaskTreePanel.Children.Add(circle);
-            MainWindow.instance?.TaskTreePanel.Children.Add(circle2);
+            TaskTreePanel.instance?.TaskTreeGrid.Children.Add(border);
+            TaskTreePanel.instance?.TaskTreeGrid.Children.Add(circle);
+            TaskTreePanel.instance?.TaskTreeGrid.Children.Add(circle2);
             borderPreview = border;
             this.circle = circle;
             this.circle2 = circle2;
@@ -127,7 +127,7 @@ namespace TaskTree
             if(isPointerInCircle == false)
             {
                 // 设置鼠标指针为四方向（移动）图标
-                MainWindow.instance.Cursor = new Cursor(StandardCursorType.SizeAll);
+                TaskTreePanel.instance.Cursor = new Cursor(StandardCursorType.SizeAll);
                 Debug.WriteLine("预览图标进入了");
             }
         }
@@ -135,7 +135,7 @@ namespace TaskTree
         private void Border_PointerLeave(object? sender, PointerEventArgs e)
         {
             // 恢复默认鼠标指针
-            MainWindow.instance.Cursor = new Cursor(StandardCursorType.Arrow);
+            TaskTreePanel.instance.Cursor = new Cursor(StandardCursorType.Arrow);
         }
         // 当鼠标在图标内按下时
         private void Border_PointerPressed(object? sender, PointerPressedEventArgs e)
@@ -154,7 +154,7 @@ namespace TaskTree
         {
             isPointerInCircle = true;
             // 设置鼠标指针为手型图标
-            MainWindow.instance.Cursor = new Cursor(StandardCursorType.Hand);
+            TaskTreePanel.instance.Cursor = new Cursor(StandardCursorType.Hand);
             Debug.WriteLine("确认圆形按钮进入了");
         }
         
@@ -163,7 +163,7 @@ namespace TaskTree
         {
             isPointerInCircle = false;
             // 恢复默认鼠标指针
-            MainWindow.instance.Cursor = new Cursor(StandardCursorType.Arrow);
+            TaskTreePanel.instance.Cursor = new Cursor(StandardCursorType.Arrow);
         }
         // 当鼠标在图标内按下时
         private void 确认_PointerPressed(object? sender, PointerPressedEventArgs e)
@@ -187,11 +187,11 @@ namespace TaskTree
         {
             if (move)
             {
-                var point = e.GetPosition(MainWindow.instance);
+                var point = e.GetPosition(TaskTreePanel.instance);
                 
                 // 计算经过偏移后，鼠标相对于任务图的位置，也就是图标的真实位置
-                var deltaX = point.X - MainWindow.instance.TaskTreePanelX - contextPoint.X;
-                var deltaY = point.Y - MainWindow.instance.TaskTreePanelY -50 - contextPoint.Y;
+                var deltaX = point.X - TaskTreePanel.instance.TaskTreePanelX - contextPoint.X;
+                var deltaY = point.Y - TaskTreePanel.instance.TaskTreePanelY -50 - contextPoint.Y;
 
                 // 网格对齐
                 if (isGridAlign)
@@ -224,9 +224,9 @@ namespace TaskTree
         // 删除自身全部控件包括类实例
         public void Delete()
         {
-            MainWindow.instance?.TaskTreePanel.Children.Remove(borderPreview);
-            MainWindow.instance?.TaskTreePanel.Children.Remove(circle);
-            MainWindow.instance?.TaskTreePanel.Children.Remove(circle2);
+            TaskTreePanel.instance?.TaskTreeGrid.Children.Remove(borderPreview);
+            TaskTreePanel.instance?.TaskTreeGrid.Children.Remove(circle);
+            TaskTreePanel.instance?.TaskTreeGrid.Children.Remove(circle2);
             borderPreview = null;
             circle = null;
             circle2 = null;

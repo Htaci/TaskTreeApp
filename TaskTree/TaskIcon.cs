@@ -17,7 +17,7 @@ using Point = Avalonia.Point;
 
 namespace TaskTree
 {
-    public  class TaskIcon : Window
+    public  class TaskIcon1
     {
         /// <summary>
         /// 任务编号
@@ -34,10 +34,10 @@ namespace TaskTree
         public ContextMenu contextMenu;
 
         public Border Taskborder;
-        public TaskIcon(Thickness thickness, int Ts)
+        public TaskIcon1(Thickness thickness, int Ts)
         {
             TaskSerial = Ts;
-            Controls_TaskIcon(thickness, 20);
+            Controls_TaskIcon(thickness);
         }
 
 
@@ -47,13 +47,13 @@ namespace TaskTree
         /// </summary>
         /// <param name="thickness"></param>
         /// <param name="TaskSerial"></param>
-        public void Controls_TaskIcon(Thickness thickness, int ts)
+        public void Controls_TaskIcon(Thickness thickness)
         {
             bool IsTaskComplete = true;
             // 判断此任务是否完成，如果没有任务条目则默认没有完成
-            if (MainWindow.instance?.jsonData.Tasks[TaskSerial].TaskTarget.Count > 0)
+            if (TaskTreePanel.instance?.jsonData.Tasks[TaskSerial].TaskTarget.Count > 0)
             {
-                foreach (var task in MainWindow.instance?.jsonData.Tasks[TaskSerial].TaskTarget)
+                foreach (var task in TaskTreePanel.instance?.jsonData.Tasks[TaskSerial].TaskTarget)
                 {
                     if (!task.IsComplete)
                     {
@@ -118,9 +118,19 @@ namespace TaskTree
             border.Child = grid;
             Taskborder = border;
             // 将 Border 添加到任务图
-            MainWindow.instance?.TaskTreePanel.Children.Add(border);
+            TaskTreePanel.instance?.TaskTreeGrid.Children.Add(border);
             // 阻止事件冒泡
             border.PointerPressed += (s, e) => e.Handled = true;
+        }
+
+        /// <summary>
+        /// 生成预览标题
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void Controls_TaskIconTile()
+        {
+
         }
 
         private void Button_Icon(object? sender, PointerPressedEventArgs e)
@@ -131,38 +141,38 @@ namespace TaskTree
             {
                 Debug.WriteLine("左键被按下");
                 // 检查是否已经有了右键菜单
-                if (MainWindow.instance._contextMenu != null)
+                if (TaskTreePanel.instance._contextMenu != null)
                 {
-                    MainWindow.instance.MainPanel.Children.Remove(MainWindow.instance._contextMenu);
-                    MainWindow.instance._contextMenu = null;
+                    TaskTreePanel.instance.MainPanel.Children.Remove(TaskTreePanel.instance._contextMenu);
+                    TaskTreePanel.instance._contextMenu = null;
                 }
 
 
-                if (!MainWindow.instance.isConnectionStatus)
+                if (!TaskTreePanel.instance.isConnectionStatus)
                 {
-                    TaskData taskData = MainWindow.instance.jsonData.Tasks[TaskSerial];
+                    TaskData taskData = TaskTreePanel.instance.jsonData.Tasks[TaskSerial];
                     //MainWindow.instance.OpenTaskPlanel(taskData);
                     Debug.WriteLine($"任务ID：{TaskSerial} 触发任务：打开任务面板");
-                    MainWindow.instance.OpenTaskPlanel(TaskSerial);
+                    TaskTreePanel.instance.OpenTaskPlanel(TaskSerial);
                 }
 
                 // 如果是正在连接状态 , 且该图标不是发起任务的图标时, 触发连接
-                if (MainWindow.instance.isConnectionStatus && MainWindow.instance.connectionTaskSerial.TaskSerial != TaskSerial)
+                if (TaskTreePanel.instance.isConnectionStatus && TaskTreePanel.instance.connectionTaskSerial.TaskSerial != TaskSerial)
                 {
                     // 清除预览
-                    MainWindow.instance.previewDirectionLine.RemoveDirectionLine();
-                    MainWindow.instance.previewDirectionLine = null;
-                    MainWindow.instance.isConnectionStatus = false;
+                    TaskTreePanel.instance.previewDirectionLine.RemoveDirectionLine();
+                    TaskTreePanel.instance.previewDirectionLine = null;
+                    TaskTreePanel.instance.isConnectionStatus = false;
                     // 创建一个新的指向线
-                    DirectionLine line = new DirectionLine(MainWindow.instance.jsonData.Tasks[MainWindow.instance.connectionTaskSerial.TaskSerial], MainWindow.instance.jsonData.Tasks[TaskSerial]);
+                    DirectionLine line = new DirectionLine(TaskTreePanel.instance.jsonData.Tasks[TaskTreePanel.instance.connectionTaskSerial.TaskSerial], TaskTreePanel.instance.jsonData.Tasks[TaskSerial]);
                     directionLines.Add(line);
-                    MainWindow.instance.connectionTaskSerial.directionLines.Add(line);
+                    TaskTreePanel.instance.connectionTaskSerial.directionLines.Add(line);
                     // 添加到json
-                    MainWindow.instance.jsonData.Tasks[MainWindow.instance.connectionTaskSerial.TaskSerial].TaskTargetLine.Add(TaskSerial);
-                    Debug.WriteLine($"开始任务{MainWindow.instance.connectionTaskSerial.TaskSerial}的指向线列表有{MainWindow.instance.connectionTaskSerial.directionLines.Count}个");
+                    TaskTreePanel.instance.jsonData.Tasks[TaskTreePanel.instance.connectionTaskSerial.TaskSerial].TaskTargetLine.Add(TaskSerial);
+                    Debug.WriteLine($"开始任务{TaskTreePanel.instance.connectionTaskSerial.TaskSerial}的指向线列表有{TaskTreePanel.instance.connectionTaskSerial.directionLines.Count}个");
                     Debug.WriteLine($"被指向任务{TaskSerial}的指向线列表有{directionLines.Count}个");
                     // 重置任务
-                    MainWindow.instance.connectionTaskSerial = null;
+                    TaskTreePanel.instance.connectionTaskSerial = null;
                 }
 
 
@@ -171,7 +181,7 @@ namespace TaskTree
             {
                 Debug.WriteLine("右键被按下（图标）");
 
-                创建右键菜单(e.GetPosition(MainWindow.instance));
+                创建右键菜单(e.GetPosition(TaskTreePanel.instance));
             }
 
 
@@ -180,10 +190,10 @@ namespace TaskTree
         public void 创建右键菜单(Point point)
         {
             // 检查是否已经有了右键菜单
-            if (MainWindow.instance?._contextMenu != null)
+            if (TaskTreePanel.instance?._contextMenu != null)
             {
-                MainWindow.instance.MainPanel.Children.Remove(MainWindow.instance._contextMenu);
-                MainWindow.instance._contextMenu = null;
+                TaskTreePanel.instance.MainPanel.Children.Remove(TaskTreePanel.instance._contextMenu);
+                TaskTreePanel.instance._contextMenu = null;
             }
             var 右键菜单选项 = new MenuItem
             {
@@ -214,8 +224,8 @@ namespace TaskTree
             右键菜单.Items.Add(右键菜单选项3);
 
 
-            MainWindow.instance.MainPanel.Children.Add(右键菜单);
-            MainWindow.instance._contextMenu = 右键菜单;
+            TaskTreePanel.instance.MainPanel.Children.Add(右键菜单);
+            TaskTreePanel.instance._contextMenu = 右键菜单;
 
             // 阻止事件冒泡
             右键菜单.PointerPressed += (s, e) => e.Handled = true;
@@ -225,14 +235,14 @@ namespace TaskTree
         {
             // 在这里处理点击事件
             Debug.WriteLine("连接任务触发");
-            MainWindow.instance.connectionTaskSerial = this;
-            MainWindow.instance.isConnectionStatus = true;
+            //TaskTreePanel.instance.connectionTaskSerial = this;
+            //TaskTreePanel.instance.isConnectionStatus = true;
 
             // 检查是否已经有了右键菜单
-            if (MainWindow.instance?._contextMenu != null)
+            if (TaskTreePanel.instance?._contextMenu != null)
             {
-                MainWindow.instance.MainPanel.Children.Remove(MainWindow.instance._contextMenu);
-                MainWindow.instance._contextMenu = null;
+                TaskTreePanel.instance.MainPanel.Children.Remove(TaskTreePanel.instance._contextMenu);
+                TaskTreePanel.instance._contextMenu = null;
             }
         }
 
@@ -242,41 +252,41 @@ namespace TaskTree
             // 隐藏该控件
             Taskborder.IsVisible = false;
             // 创建一个新的预览图标
-            new TaskIconPreview(MainWindow.instance.jsonData.Tasks[TaskSerial]);
+            new TaskIconPreview(TaskTreePanel.instance.jsonData.Tasks[TaskSerial]);
 
             // 检查是否已经有了右键菜单
-            if (MainWindow.instance?._contextMenu != null)
+            if (TaskTreePanel.instance?._contextMenu != null)
             {
-                MainWindow.instance.MainPanel.Children.Remove(MainWindow.instance._contextMenu);
-                MainWindow.instance._contextMenu = null;
+                TaskTreePanel.instance.MainPanel.Children.Remove(TaskTreePanel.instance._contextMenu);
+                TaskTreePanel.instance._contextMenu = null;
             }
         }
 
         private void On删除任务Clicked(object? sender, RoutedEventArgs e)
         {
-            MainWindow.instance.DeleteTask(TaskSerial);
+            TaskTreePanel.instance.DeleteTask(TaskSerial);
 
             // 检查是否已经有了右键菜单
-            if (MainWindow.instance?._contextMenu != null)
+            if (TaskTreePanel.instance?._contextMenu != null)
             {
-                MainWindow.instance.MainPanel.Children.Remove(MainWindow.instance._contextMenu);
-                MainWindow.instance._contextMenu = null;
+                TaskTreePanel.instance.MainPanel.Children.Remove(TaskTreePanel.instance._contextMenu);
+                TaskTreePanel.instance._contextMenu = null;
             }
         }
         // 鼠标进入时
         private void Border_PointerEnter(object? sender, PointerEventArgs e)
         {
             // 设置鼠标指针为手型图标
-            MainWindow.instance.Cursor = new Cursor(StandardCursorType.Hand);
+            TaskTreePanel.instance.Cursor = new Cursor(StandardCursorType.Hand);
 
             // 如果是正在连接状态 , 且该图标不是发起任务的图标
-            if (MainWindow.instance.isConnectionStatus && MainWindow.instance.connectionTaskSerial.TaskSerial != TaskSerial)
+            if (TaskTreePanel.instance.isConnectionStatus && TaskTreePanel.instance.connectionTaskSerial.TaskSerial != TaskSerial)
             {
-                DirectionLine directionLine = new DirectionLine(MainWindow.instance.jsonData.Tasks[MainWindow.instance.connectionTaskSerial.TaskSerial], MainWindow.instance.jsonData.Tasks[TaskSerial]);
+                DirectionLine directionLine = new DirectionLine(TaskTreePanel.instance.jsonData.Tasks[TaskTreePanel.instance.connectionTaskSerial.TaskSerial], TaskTreePanel.instance.jsonData.Tasks[TaskSerial]);
                 directionLine.动画 = true;
                 directionLine.StartAsyncTask();
 
-                MainWindow.instance.previewDirectionLine = directionLine;
+                TaskTreePanel.instance.previewDirectionLine = directionLine;
             }
 
             foreach (var s in directionLines)
@@ -289,14 +299,14 @@ namespace TaskTree
         private void Border_PointerLeave(object? sender, PointerEventArgs e)
         {
             // 恢复默认鼠标指针
-            MainWindow.instance.Cursor = new Cursor(StandardCursorType.Arrow);
+            TaskTreePanel.instance.Cursor = new Cursor(StandardCursorType.Arrow);
 
             // 如果是正在连接状态 , 且该图标不是发起任务的图标
-            if (MainWindow.instance.isConnectionStatus && MainWindow.instance.connectionTaskSerial.TaskSerial != TaskSerial)
+            if (TaskTreePanel.instance.isConnectionStatus && TaskTreePanel.instance.connectionTaskSerial.TaskSerial != TaskSerial)
             {
                 //MainWindow.instance.previewDirectionLine.动画 = false;
-                MainWindow.instance.previewDirectionLine.RemoveDirectionLine();
-                MainWindow.instance.previewDirectionLine = null;
+                TaskTreePanel.instance.previewDirectionLine.RemoveDirectionLine();
+                TaskTreePanel.instance.previewDirectionLine = null;
             }
 
             foreach (var s in directionLines)
@@ -322,15 +332,15 @@ namespace TaskTree
 
         public void 刷新任务图标()
         {
-            Taskborder.Margin = new Thickness(MainWindow.instance.jsonData.Tasks[TaskSerial].Width, 
-                MainWindow.instance.jsonData.Tasks[TaskSerial].Height,0,0);
+            Taskborder.Margin = new Thickness(TaskTreePanel.instance.jsonData.Tasks[TaskSerial].Width,
+                TaskTreePanel.instance.jsonData.Tasks[TaskSerial].Height,0,0);
 
 
             bool IsTaskComplete = true;
             // 判断此任务是否完成，如果没有任务条目则默认没有完成
-            if (MainWindow.instance?.jsonData.Tasks[TaskSerial].TaskTarget.Count > 0)
+            if (TaskTreePanel.instance?.jsonData.Tasks[TaskSerial].TaskTarget.Count > 0)
             {
-                foreach (var task in MainWindow.instance?.jsonData.Tasks[TaskSerial].TaskTarget)
+                foreach (var task in TaskTreePanel.instance?.jsonData.Tasks[TaskSerial].TaskTarget)
                 {
                     if (!task.IsComplete)
                     {
@@ -359,19 +369,7 @@ namespace TaskTree
         public void 删除任务图标()
         {
             Debug.WriteLine($"任务：{TaskSerial} 被删除");
-            //foreach (var s in directionLines)
-            //{
-            //    Debug.WriteLine($"1");
-            //    // 删除指向线自身
-            //    s.RemoveDirectionLine();
-            //    Debug.WriteLine($"2");
-            //    // 删除目标对象directionLines列表中的指向线
-            //    s.end.taskIcon.directionLines.Remove(s);
-            //    Debug.WriteLine($"3");
-            //    // 删除指向线在 jsonData 中的数据
-            //    s.RemoveDirectionLineFromData();
-            //    Debug.WriteLine($"4");
-            //}
+
             for (int i = directionLines.Count - 1; i >= 0; i--)
             {
                 var s = directionLines[i];
@@ -381,7 +379,7 @@ namespace TaskTree
                 s.RemoveDirectionLineFromData();
             }
             //Debug.WriteLine($"5");
-            MainWindow.instance.TaskTreePanel.Children.Remove(Taskborder);
+            TaskTreePanel.instance.TaskTreeGrid.Children.Remove(Taskborder);
             //Debug.WriteLine($"6");
         }
     }
