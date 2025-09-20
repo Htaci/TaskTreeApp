@@ -21,6 +21,7 @@
 				</HyperlinkButton.Flyout>
 			</HyperlinkButton>
 
+
 			<!-- 指向线 -->
 			<Grid  x:Name="DirectionLineGrid" HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="0,0,0,0">
 
@@ -29,8 +30,14 @@
 			<Grid x:Name="TaskTreeGrid" HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="0,0,0,0">
 
 			</Grid>
-
+			
+			<!-- 右键菜单 -->
+			<Grid x:Name="MenuLtemGrid"
+			      HorizontalAlignment="Left" 
+			      VerticalAlignment="Top"/>
 		</Grid>
+
+		
 	</Border>
 	<!-- 任务卡片的背景 -->
 	<Grid x:Name="TaskPanelBackground" IsVisible="False" Background="Black" Opacity="0.9" Margin="0,45,0,0"/>

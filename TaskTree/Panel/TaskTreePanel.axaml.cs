@@ -23,24 +23,29 @@ namespace TaskTree;
 
 public partial class TaskTreePanel : UserControl
 {
-    public Point _startPoint;
-    public bool move = false;
+    private Point _startPoint;
+    private bool _move = false;
 
-    public Double TaskTreePanelX = 0; // ³õÊ¼ X Æ«ÒÆÁ¿
-    public Double TaskTreePanelY = 0; // ³õÊ¼ Y Æ«ÒÆÁ¿
+    public Double TaskTreePanelX = 0; // åˆå§‹ X åç§»é‡
+    public Double TaskTreePanelY = 0; // åˆå§‹ Y åç§»é‡
 
     public ContextMenu _contextMenu;
+
     /// <summary>
-    /// ÊÇ·ñ´¦ÓÚÁ¬½Ó×´Ì¬
+    /// åœ¨ä»»åŠ¡èƒŒæ™¯å›¾ä¸Šå³é”®æ—¶æ‰“å¼€çš„èœå•æ˜¯å¦å­˜åœ¨
+    /// </summary>
+    private bool _panelContentMenu;
+    /// <summary>
+    /// æ˜¯å¦å¤„äºè¿æ¥çŠ¶æ€
     /// </summary>
     public bool isConnectionStatus = false;
     /// <summary>
-    /// ÄÄ¸öÈÎÎñ·¢ÆğµÄÁ¬½Ó
+    /// å“ªä¸ªä»»åŠ¡å‘èµ·çš„è¿æ¥
     /// </summary>
     public TaskIcon connectionTaskSerial;
 
     /// <summary>
-    /// ÁÙÊ±Ö¸ÏòÏß,ÓÃÓÚÔ¤ÀÀÖ¸ÏòÏß´´½¨Ğ§¹û
+    /// ä¸´æ—¶æŒ‡å‘çº¿,ç”¨äºé¢„è§ˆæŒ‡å‘çº¿åˆ›å»ºæ•ˆæœ
     /// </summary>
     public DirectionLine previewDirectionLine;
 
@@ -56,42 +61,42 @@ public partial class TaskTreePanel : UserControl
         //Debug.WriteLine("");
         //Line1.EndPoint = new Point(300, 30);
 
-        // ²âÊÔ<
+        // æµ‹è¯•<
         //new TaskIconPreview(1);
-        // ²âÊÔ>
+        // æµ‹è¯•>
         DebugTask();
     }
 
-    #region Êó±ê²Ù×÷
-    // µ±Êó±ê°´ÏÂÊ±
+    #region é¼ æ ‡æ“ä½œ
+    // å½“é¼ æ ‡æŒ‰ä¸‹æ—¶
     private void Form_OnDragStart(object? sender, PointerPressedEventArgs e)
     {
         var point = e.GetCurrentPoint(sender as Control);
         _startPoint = e.GetPosition(this);
         if (point.Properties.IsLeftButtonPressed)
         {
-            Debug.WriteLine("×ó¼ü±»°´ÏÂ");
-            // ¼ì²éÊÇ·ñÒÑ¾­ÓĞÁËÓÒ¼ü²Ëµ¥
+            Debug.WriteLine("å·¦é”®è¢«æŒ‰ä¸‹");
+            // æ£€æŸ¥æ˜¯å¦å·²ç»æœ‰äº†å³é”®èœå•
             if (_contextMenu != null)
             {
                 MainPanel.Children.Remove(_contextMenu);
                 _contextMenu = null;
             }
 
-            move = true;
+            _move = true;
         }
         if (point.Properties.IsRightButtonPressed)
         {
-            Debug.WriteLine("ÓÒ¼ü±»°´ÏÂ");
+            Debug.WriteLine("å³é”®è¢«æŒ‰ä¸‹");
 
-            ´´½¨ÓÒ¼ü²Ëµ¥(e.GetPosition(this));
+            åˆ›å»ºå³é”®èœå•(e.GetPosition(this));
         }
 
     }
-    // µ±Êó±êÒÆ¶¯Ê±
+    // å½“é¼ æ ‡ç§»åŠ¨æ—¶
     private void Form_OnDragMove(object? sender, PointerEventArgs e)
     {
-        if (move)
+        if (_move)
         {
             var currentPosition = e.GetPosition(this);
             var deltaX = currentPosition.X - _startPoint.X;
@@ -102,76 +107,76 @@ public partial class TaskTreePanel : UserControl
 
             TaskTreeGrid.RenderTransform = new TranslateTransform
             {
-                X = TaskTreePanelX, // X Æ«ÒÆÁ¿
-                Y = TaskTreePanelY  // Y Æ«ÒÆÁ¿
+                X = TaskTreePanelX, // X åç§»é‡
+                Y = TaskTreePanelY  // Y åç§»é‡
             };
             DirectionLineGrid.RenderTransform = new TranslateTransform
             {
-                X = TaskTreePanelX, // X Æ«ÒÆÁ¿
-                Y = TaskTreePanelY  // Y Æ«ÒÆÁ¿
+                X = TaskTreePanelX, // X åç§»é‡
+                Y = TaskTreePanelY  // Y åç§»é‡
             };
 
             _startPoint = currentPosition;
         }
     }
 
-    // µ±Êó±êËÉ¿ªÊ±
+    // å½“é¼ æ ‡æ¾å¼€æ—¶
     private void Form_OnDragEnd(object? sender, PointerReleasedEventArgs e)
     {
-        move = false;
+        _move = false;
     }
 
     #endregion
 
     /// <summary>
-    /// ³õÊ¼»¯
+    /// åˆå§‹åŒ–
     /// </summary>
     public void initialization()
     {
-        // ¼ÓÔØÎÄ¼ş
+        // åŠ è½½æ–‡ä»¶
         bool isFile = Load_JsonFile();
 
 
         if (isFile)
         {
-            Debug.WriteLine("ÎÄ¼ş MainPanel.json ´æÔÚ£¡");
-            // ·´ĞòÁĞ»¯ÎÄ¼şÄÚÈİ
+            Debug.WriteLine("æ–‡ä»¶ MainPanel.json å­˜åœ¨ï¼");
+            // ååºåˆ—åŒ–æ–‡ä»¶å†…å®¹
             Load_TackData();
-            // ¸üĞÂÕû¸öÈÎÎñÊ÷
+            // æ›´æ–°æ•´ä¸ªä»»åŠ¡æ ‘
             TaskTreePanelUpdate();
         }
         else
         {
-            Debug.WriteLine("ÎÄ¼ş MainPanel.json ²»´æÔÚ¡£");
-            // ´´½¨°´Å¥
+            Debug.WriteLine("æ–‡ä»¶ MainPanel.json ä¸å­˜åœ¨ã€‚");
+            // åˆ›å»ºæŒ‰é’®
             var button = new Button
             {
-                Content = "»¹Ã»ÓĞÈÎÎñÊ÷£¬´´½¨Ò»¸ö°É!",
+                Content = "è¿˜æ²¡æœ‰ä»»åŠ¡æ ‘ï¼Œåˆ›å»ºä¸€ä¸ªå§!",
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
                 Margin = new Thickness(10)
             };
 
-            // °ó¶¨µã»÷ÊÂ¼ş
+            // ç»‘å®šç‚¹å‡»äº‹ä»¶
             button.Click += Click_NewMainTree;
 
-            // ½«°´Å¥Ìí¼Óµ½ TaskTreePanel
+            // å°†æŒ‰é’®æ·»åŠ åˆ° TaskTreePanel
             MainPanel.Children.Add(button);
         }
 
     }
 
-    // ĞÂ½¨ÈÎÎñÊ÷µÄ°´Å¥
+    // æ–°å»ºä»»åŠ¡æ ‘çš„æŒ‰é’®
     private void Click_NewMainTree(object? sender, RoutedEventArgs e)
     {
         NewTaskFile("MainPanel");
         Load_TackData();
 
         TaskTreePanelUpdate();
-        // ¼ì²é sender ÊÇ·ñÎª Control ÀàĞÍ
+        // æ£€æŸ¥ sender æ˜¯å¦ä¸º Control ç±»å‹
         if (sender is Control control)
         {
-            // ´Ó MainPanel ÖĞÒÆ³ı¸Ã¿Ø¼ş
+            // ä» MainPanel ä¸­ç§»é™¤è¯¥æ§ä»¶
             MainPanel.Children.Remove(control);
         }
     }
@@ -185,21 +190,21 @@ public partial class TaskTreePanel : UserControl
         }
     }
 
-    public void ´´½¨ÓÒ¼ü²Ëµ¥(Point point)
+    public void åˆ›å»ºå³é”®èœå•(Point point)
     {
-        // ¼ì²éÊÇ·ñÒÑ¾­ÓĞÁËÓÒ¼ü²Ëµ¥
+        // æ£€æŸ¥æ˜¯å¦å·²ç»æœ‰äº†å³é”®èœå•
         if (_contextMenu != null)
         {
             MainPanel.Children.Remove(_contextMenu);
             _contextMenu = null;
         }
-        var ÓÒ¼ü²Ëµ¥Ñ¡Ïî = new MenuItem
+        var å³é”®èœå•é€‰é¡¹ = new MenuItem
         {
-            Header = "ĞÂ½¨ÈÎÎñ"
+            Header = "æ–°å»ºä»»åŠ¡"
         };
-        // °ó¶¨µã»÷ÊÂ¼ş
-        ÓÒ¼ü²Ëµ¥Ñ¡Ïî.Click += On´´½¨ÈÎÎñClicked;
-        var ÓÒ¼ü²Ëµ¥ = new ContextMenu
+        // ç»‘å®šç‚¹å‡»äº‹ä»¶
+        å³é”®èœå•é€‰é¡¹.Click += Onåˆ›å»ºä»»åŠ¡Clicked;
+        var å³é”®èœå• = new ContextMenu
         {
             HorizontalAlignment = HorizontalAlignment.Left,
             VerticalAlignment = VerticalAlignment.Top,
@@ -207,37 +212,46 @@ public partial class TaskTreePanel : UserControl
             Width = 150,
             Height = 55
         };
-        ÓÒ¼ü²Ëµ¥.Items.Add(ÓÒ¼ü²Ëµ¥Ñ¡Ïî);
+        //å³é”®èœå•.Items.Add(å³é”®èœå•é€‰é¡¹);
 
-        MainPanel.Children.Add(ÓÒ¼ü²Ëµ¥);
-        _contextMenu = ÓÒ¼ü²Ëµ¥;
+        //MainPanel.Children.Add(å³é”®èœå•);
+        //_contextMenu = å³é”®èœå•;
 
-        // ×èÖ¹ÊÂ¼şÃ°Åİ
-        ÓÒ¼ü²Ëµ¥.PointerPressed += (s, e) => e.Handled = true;
+        // é˜»æ­¢äº‹ä»¶å†’æ³¡
+        å³é”®èœå•.PointerPressed += (s, e) => e.Handled = true;
+        
+        // æ¸…ç©ºå³é”®èœå•å®¹å™¨
+        MenuLtemGrid.Children.Clear();
+
+        MenuLtemGrid.Children.Add(new TaskIconMenuItem()
+        {
+            Margin = new Thickness(point.X, point.Y - 50, 0, 0),
+            taskTreePanel = this
+        });
     }
 
 
-    private void On´´½¨ÈÎÎñClicked(object? sender, RoutedEventArgs e)
+    private void Onåˆ›å»ºä»»åŠ¡Clicked(object? sender, RoutedEventArgs e)
     {
-        // »ñÈ¡ContextMenuµÄMarginÎ»ÖÃ
+        // è·å–ContextMenuçš„Marginä½ç½®
         if (_contextMenu != null)
         {
             var margin = _contextMenu.Margin;
-            //Debug.WriteLine($"ÓÒ¼ü´°¿Ú Margin: Left={margin.Left}, Top={margin.Top}, Right={margin.Right}, Bottom={margin.Bottom}");
+            //Debug.WriteLine($"å³é”®çª—å£ Margin: Left={margin.Left}, Top={margin.Top}, Right={margin.Right}, Bottom={margin.Bottom}");
             //Debug.WriteLine( $"TaskTreePanelX = {TaskTreePanelX},TaskTreePanelY = {TaskTreePanelY}" );
             int x = (int)(margin.Left - TaskTreePanelX);
             int y = (int)(margin.Top - TaskTreePanelY);
 
-            // Ìí¼ÓÈÎÎñ²¢Ë¢ĞÂ
+            // æ·»åŠ ä»»åŠ¡å¹¶åˆ·æ–°
             int newTaskId = AddTask(x, y);
             jsonData.Tasks[newTaskId].taskIcon = new TaskIcon 
             {
                 TaskSerial = newTaskId,
                 thickness = new Thickness(x, y, 0, 0)
             };//new TaskIcon(new Thickness(x, y, 0, 0), newTaskId);
-            Debug.WriteLine($"´´½¨ÈÎÎñ´¥·¢:´´½¨ÁËĞÂÈÎÎñ,X{x},Y{y}");
-            // TaskTreePanelUpdate();
-            // É¾³ıÓÒ¼ü²Ëµ¥
+            Debug.WriteLine($"åˆ›å»ºä»»åŠ¡è§¦å‘:åˆ›å»ºäº†æ–°ä»»åŠ¡,X{x},Y{y}");
+            TaskTreePanelUpdate();
+            // åˆ é™¤å³é”®èœå•
             MainPanel.Children.Remove(_contextMenu);
             _contextMenu = null;
         }
@@ -251,26 +265,26 @@ public partial class TaskTreePanel : UserControl
 
 
     /// <summary>
-    /// µ¥¸öÈÎÎñÊ÷µÄÊı¾İ
-    /// <para>°üº¬ÁË£º</para>
-    /// <para>1.ÈÎÎñÍ¼±ê£¨Î»ÖÃĞÅÏ¢£¬±êÇ©ĞÅÏ¢£¬ÊÇ·ñÍê³É£©</para>
-    /// <para>2.ÈÎÎñÍ¼±êµÄÖ¸ÏòÏß</para>
-    /// <para>3.µ¥¸öÈÎÎñµÄÏêÏ¸ÄÚÈİ£¨ÈÎÎñÌõÄ¿ÒÔ¼°ÊÇ·ñÍê³É£©</para>
+    /// å•ä¸ªä»»åŠ¡æ ‘çš„æ•°æ®
+    /// <para>åŒ…å«äº†ï¼š</para>
+    /// <para>1.ä»»åŠ¡å›¾æ ‡ï¼ˆä½ç½®ä¿¡æ¯ï¼Œæ ‡ç­¾ä¿¡æ¯ï¼Œæ˜¯å¦å®Œæˆï¼‰</para>
+    /// <para>2.ä»»åŠ¡å›¾æ ‡çš„æŒ‡å‘çº¿</para>
+    /// <para>3.å•ä¸ªä»»åŠ¡çš„è¯¦ç»†å†…å®¹ï¼ˆä»»åŠ¡æ¡ç›®ä»¥åŠæ˜¯å¦å®Œæˆï¼‰</para>
     /// </summary>
     public RootData jsonData = new RootData();
     public string filePath;
 
     /// <summary>
-    /// ¼ÓÔØjsonÎÄ¼şÂ·¾¶
+    /// åŠ è½½jsonæ–‡ä»¶è·¯å¾„
     /// </summary>
     public bool Load_JsonFile()
     {
-        // »ñÈ¡³ÌĞòµÄ¸ùÄ¿Â¼
+        // è·å–ç¨‹åºçš„æ ¹ç›®å½•
         string rootDirectory = AppContext.BaseDirectory;
-        // ¹¹½¨Ä¿±êÎÄ¼şµÄÍêÕûÂ·¾¶
+        // æ„å»ºç›®æ ‡æ–‡ä»¶çš„å®Œæ•´è·¯å¾„
         string assetsFolder = Path.Combine(rootDirectory, "Assets");
         filePath = Path.Combine(assetsFolder, $"MainPanel.json");
-        // ¼ì²éÎÄ¼şÊÇ·ñ´æÔÚ
+        // æ£€æŸ¥æ–‡ä»¶æ˜¯å¦å­˜åœ¨
         if (File.Exists(filePath))
         {
             return true;
@@ -281,50 +295,50 @@ public partial class TaskTreePanel : UserControl
         }
     }
     /// <summary>
-    /// ¶ÁÈ¡ Json ÎÄ¼ş²¢·´ĞòÁĞ»¯µ½ jsonData
+    /// è¯»å– Json æ–‡ä»¶å¹¶ååºåˆ—åŒ–åˆ° jsonData
     /// </summary>
     public void Load_TackData()
     {
-        // ¼ì²éÎÄ¼şÊÇ·ñ´æÔÚ
+        // æ£€æŸ¥æ–‡ä»¶æ˜¯å¦å­˜åœ¨
         if (!File.Exists(filePath))
         {
-            Debug.WriteLine("ÎÄ¼ş²»´æÔÚ¡£");
+            Debug.WriteLine("æ–‡ä»¶ä¸å­˜åœ¨ã€‚");
             return;
         }
 
-        // ¶ÁÈ¡ÎÄ¼şÄÚÈİ
+        // è¯»å–æ–‡ä»¶å†…å®¹
         string content = File.ReadAllText(filePath);
 
-        // ·´ĞòÁĞ»¯ JSON Êı¾İ
+        // ååºåˆ—åŒ– JSON æ•°æ®
         jsonData = JsonSerializer.Deserialize<RootData>(content, new JsonSerializerOptions { WriteIndented = true });
 
     }
 
     /// <summary>
-    /// ĞòÁĞ»¯²¢±£´æµ½ÎÄ¼ş
+    /// åºåˆ—åŒ–å¹¶ä¿å­˜åˆ°æ–‡ä»¶
     /// </summary>
     public void Save_TackData()
     {
-        // ĞòÁĞ»¯ JSON Êı¾İ
+        // åºåˆ—åŒ– JSON æ•°æ®
         string updatedContent = JsonSerializer.Serialize(jsonData, new JsonSerializerOptions { WriteIndented = true });
         Debug.WriteLine($"{updatedContent}");
         DebugTask();
-        // Ğ´ÈëÎÄ¼ş
+        // å†™å…¥æ–‡ä»¶
         File.WriteAllText(filePath, updatedContent);
 
     }
 
-    // ĞÂ½¨ĞÂµÄÈÎÎñÊ÷ÎÄ¼ş
+    // æ–°å»ºæ–°çš„ä»»åŠ¡æ ‘æ–‡ä»¶
     public void NewTaskFile(string name)
     {
-        // »ñÈ¡³ÌĞòµÄ¸ùÄ¿Â¼
+        // è·å–ç¨‹åºçš„æ ¹ç›®å½•
         string rootDirectory = AppContext.BaseDirectory;
 
-        // ¹¹½¨Ä¿±êÎÄ¼şµÄÍêÕûÂ·¾¶
+        // æ„å»ºç›®æ ‡æ–‡ä»¶çš„å®Œæ•´è·¯å¾„
         string assetsFolder = Path.Combine(rootDirectory, "Assets");
         string filePath = Path.Combine(assetsFolder, $"{name}.json");
 
-        // È·±£Ä¿±êÎÄ¼ş¼Ğ´æÔÚ
+        // ç¡®ä¿ç›®æ ‡æ–‡ä»¶å¤¹å­˜åœ¨
         string directory = Path.GetDirectoryName(filePath);
         if (!Directory.Exists(directory))
         {
@@ -336,51 +350,41 @@ public partial class TaskTreePanel : UserControl
         Save_TackData();
     }
 
-    // Ìí¼ÓĞÂÈÎÎñ
+    // æ·»åŠ æ–°ä»»åŠ¡
     public int AddTask(int width, int height)
     {
         int newTaskSerial;
-        // Ëæ»úÒ»¸ö ÈÎÎñid
+        // éšæœºä¸€ä¸ª ä»»åŠ¡id
         for (; ; )
         {
-            uint raw = (uint)Random.Shared.Next(int.MinValue, int.MaxValue); // 0¨E0x7FFFFFFE
-            raw |= (uint)(Random.Shared.Next(0, 2) << 31);                   // ¾ö¶¨×î¸ßÎ»
+            uint raw = (uint)Random.Shared.Next(int.MinValue, int.MaxValue); // 0â€¥0x7FFFFFFE
+            raw |= (uint)(Random.Shared.Next(0, 2) << 31);                   // å†³å®šæœ€é«˜ä½
             newTaskSerial = unchecked((int)raw);
 
             if (!jsonData.Tasks.ContainsKey(newTaskSerial))
             {
-                // Èç¹û×ÖµäÄÚÃ»ÓĞÕâ¸ö¼üÔò´ú±íËæ»úÉú³ÉµÄÕâ¸öid¿ÉÓÃ£¬ÍË³öÑ­»·
+                // å¦‚æœå­—å…¸å†…æ²¡æœ‰è¿™ä¸ªé”®åˆ™ä»£è¡¨éšæœºç”Ÿæˆçš„è¿™ä¸ªidå¯ç”¨ï¼Œé€€å‡ºå¾ªç¯
                 break;
             }
         }
 
-        Debug.WriteLine($"ĞÂÈÎÎñid£º{newTaskSerial}");
+        Debug.WriteLine($"æ–°ä»»åŠ¡idï¼š{newTaskSerial}");
 
         jsonData.Tasks[newTaskSerial] = new TaskData
         {
             TaskSerial = newTaskSerial,
             Width = width,
             Height = height,
-            TaskTitle = "¿Õ°×±êÌâ",
-            TaskTarget = new List<TaskTargetDate> { new TaskTargetDate { Target = "¿Õ°×ÈÎÎñ", IsComplete = false } },
-            TaskDetails = new List<string> { "¿Õ°×½éÉÜ" }, // ¸ÄÎª×Ö·û´®Êı×é
+            TaskTitle = "ç©ºç™½æ ‡é¢˜",
+            TaskTarget = new List<TaskTargetDate> { new TaskTargetDate { Target = "ç©ºç™½ä»»åŠ¡", IsComplete = false } },
+            TaskDetails = new List<string> { "ç©ºç™½ä»‹ç»" }, // æ”¹ä¸ºå­—ç¬¦ä¸²æ•°ç»„
         };
-        Debug.WriteLine($"Ìí¼ÓÁËĞÂÈÎÎñ£º{newTaskSerial}");
+        Debug.WriteLine($"æ·»åŠ äº†æ–°ä»»åŠ¡ï¼š{newTaskSerial}");
         return newTaskSerial;
     }
+    
 
-    // É¾³ıÈÎÎñ
-    public void DeleteTask(int taskSerial)
-    {
-        if (jsonData.Tasks.ContainsKey(taskSerial))
-        {
-            jsonData.Tasks[taskSerial].taskIcon.É¾³ıÈÎÎñÍ¼±ê();
-            jsonData.Tasks.Remove(taskSerial);
-        }
-
-    }
-
-    // ´òÓ¡ËùÓĞÈÎÎñĞòºÅ
+    // æ‰“å°æ‰€æœ‰ä»»åŠ¡åºå·
     public void DebugTask()
     {
         if (jsonData != null)
@@ -389,26 +393,26 @@ public partial class TaskTreePanel : UserControl
             {
                 foreach (var item in jsonData.Tasks)
                 {
-                    Debug.WriteLine("ÈÎÎñ±àºÅ£º" + item.Value.TaskSerial);
+                    Debug.WriteLine("ä»»åŠ¡ç¼–å·ï¼š" + item.Value.TaskSerial);
                 }
             }
             else
             {
-                Debug.WriteLine("jsonData.TasksÎª¿Õ");
+                Debug.WriteLine("jsonData.Tasksä¸ºç©º");
             }
         }
         else
         {
-            Debug.WriteLine("jsonDataÎª¿Õ");
+            Debug.WriteLine("jsonDataä¸ºç©º");
         }
 
     }
 
-    public bool EditMode = false; // ±à¼­Ä£Ê½
+    public bool EditMode = false; // ç¼–è¾‘æ¨¡å¼
 
-    public bool pointingLine = false; // Á¬½ÓÖ¸ÏòÏß
+    public bool pointingLine = false; // è¿æ¥æŒ‡å‘çº¿
 
-    // ÈÎÎñ±êÌâ±à¼­
+    // ä»»åŠ¡æ ‡é¢˜ç¼–è¾‘
     public void Edit_TaskTitle(object? sender, RoutedEventArgs e)
     {
         Edit_TaskTitlePanel.IsVisible = true;
@@ -417,19 +421,19 @@ public partial class TaskTreePanel : UserControl
     }
     public void Edit_TaskTitle1(object? sender, RoutedEventArgs e)
     {
-        // È¡Ïû
+        // å–æ¶ˆ
         Edit_TaskTitlePanel.IsVisible = false;
         Edit_TaskTitleTextBox.Text = string.Empty;
         TaskPanel.IsVisible = true;
     }
     public void Edit_TaskTitle2(object? sender, RoutedEventArgs e)
     {
-        // È·¶¨
+        // ç¡®å®š
         Edit_TaskTitlePanel.IsVisible = false;
         Debug.WriteLine(Edit_TaskTitleTextBox.Text);
         if (Edit_TaskTitleTextBox.Text == string.Empty || Edit_TaskTitleTextBox.Text == null)
         {
-            Edit_TaskTitleTextBox.Text = "¿Õ°×±êÌâ";
+            Edit_TaskTitleTextBox.Text = "ç©ºç™½æ ‡é¢˜";
         }
         jsonData.Tasks[OpenTaskSerial].TaskTitle = Edit_TaskTitleTextBox.Text;
         TaskPanelTitle.Text = Edit_TaskTitleTextBox.Text;
@@ -441,14 +445,14 @@ public partial class TaskTreePanel : UserControl
     }
     public void Edit_NewTaskTarget(object? sender, RoutedEventArgs e)
     {
-        // ´ò¿ªÈÎÎñÌõÄ¿±à¼­½çÃæ
+        // æ‰“å¼€ä»»åŠ¡æ¡ç›®ç¼–è¾‘ç•Œé¢
         Edit_TaskTargetPanel.IsVisible = true;
         TaskPanel.IsVisible = false;
-        Edit_TaskTargetTextBox.Watermark = "ĞÂ½¨ÈÎÎñÌõÄ¿";
+        Edit_TaskTargetTextBox.Watermark = "æ–°å»ºä»»åŠ¡æ¡ç›®";
     }
     public void Edit_TaskTarget1(object? sender, RoutedEventArgs e)
     {
-        // È¡Ïû
+        // å–æ¶ˆ
         Edit_TaskTargetPanel.IsVisible = false;
         Edit_TaskTargetTextBox.Text = string.Empty;
         TaskPanel.IsVisible = true;
@@ -456,28 +460,28 @@ public partial class TaskTreePanel : UserControl
     }
     public void Edit_TaskTarget2(object? sender, RoutedEventArgs e)
     {
-        // È·ÈÏ
+        // ç¡®è®¤
         Edit_TaskTargetPanel.IsVisible = false;
         if (Edit_TaskTargetTextBox.Text == null || Edit_TaskTargetTextBox.Text == string.Empty)
         {
-            Edit_TaskTargetTextBox.Text = "¿Õ°×ÈÎÎñÌõÄ¿";
+            Edit_TaskTargetTextBox.Text = "ç©ºç™½ä»»åŠ¡æ¡ç›®";
         }
         if (SubmitTaskListSerial < 0)
         {
-            Debug.WriteLine("ĞÂ½¨ÈÎÎñ");
+            Debug.WriteLine("æ–°å»ºä»»åŠ¡");
             jsonData.Tasks[OpenTaskSerial].TaskTarget.Add(new TaskTargetDate { Target = Edit_TaskTargetTextBox.Text, IsComplete = false });
         }
         else
         {
-            Debug.WriteLine("ĞŞ¸ÄÈÎÎñ");
+            Debug.WriteLine("ä¿®æ”¹ä»»åŠ¡");
             jsonData.Tasks[OpenTaskSerial].TaskTarget[SubmitTaskListSerial].Target = Edit_TaskTargetTextBox.Text;
         }
 
         Edit_TaskTargetTextBox.Text = string.Empty;
         TaskPanel.IsVisible = true;
 
-        TaskTargetPanel.Children.Clear(); // Çå³ıÈÎÎñÌõÄ¿
-                                          // ÖØĞÂ¼ÓÔØ
+        TaskTargetPanel.Children.Clear(); // æ¸…é™¤ä»»åŠ¡æ¡ç›®
+                                          // é‡æ–°åŠ è½½
         for (int i = 0; i < jsonData.Tasks[OpenTaskSerial].TaskTarget.Count; i++)
         {
             TaskTargetPanel.Children.Add(new TaskTarget()
@@ -494,11 +498,11 @@ public partial class TaskTreePanel : UserControl
 
     public void TaskTarget_Del(int ListSerial)
     {
-        // ÒÆ³ıµ±Ç°ÔªËØ
+        // ç§»é™¤å½“å‰å…ƒç´ 
         jsonData.Tasks[OpenTaskSerial].TaskTarget.RemoveAt(ListSerial);
 
-        TaskTargetPanel.Children.Clear(); // Çå³ıÈÎÎñÌõÄ¿
-                                          // ÖØĞÂ¼ÓÔØ
+        TaskTargetPanel.Children.Clear(); // æ¸…é™¤ä»»åŠ¡æ¡ç›®
+                                          // é‡æ–°åŠ è½½
         for (int i = 0; i < jsonData.Tasks[OpenTaskSerial].TaskTarget.Count; i++)
         {
             TaskTargetPanel.Children.Add(new TaskTarget()
@@ -511,17 +515,17 @@ public partial class TaskTreePanel : UserControl
 
 
 
-    public int SubmitTaskListSerial; // Ñ¡ÖĞµÄÈÎÎñÌõÄ¿
-    public int OpenTaskSerial; // µ±Ç°´ò¿ªµÄÈÎÎñ
+    public int SubmitTaskListSerial; // é€‰ä¸­çš„ä»»åŠ¡æ¡ç›®
+    public int OpenTaskSerial; // å½“å‰æ‰“å¼€çš„ä»»åŠ¡
 
-    // ´ò¿ªÈÎÎñ¿¨Æ¬
+    // æ‰“å¼€ä»»åŠ¡å¡ç‰‡
     public void OpenTaskPlanel(int TaskSerial)
     {
-        // Debug.WriteLine("µ÷ÓÃ³É¹¦");
+        // Debug.WriteLine("è°ƒç”¨æˆåŠŸ");
         OpenTaskSerial = TaskSerial;
         TaskPanelTitle.Text = jsonData.Tasks[TaskSerial].TaskTitle;
 
-        Debug.WriteLine("ÈÎÎñ¿¨Æ¬:µ±Ç°ÈÎÎñ:" + TaskSerial);
+        Debug.WriteLine("ä»»åŠ¡å¡ç‰‡:å½“å‰ä»»åŠ¡:" + TaskSerial);
         //Edit_AddTaskTarget(taskData.TaskSerial);
 
         for (int i = 0; i < jsonData.Tasks[TaskSerial].TaskTarget.Count; i++)
@@ -533,47 +537,47 @@ public partial class TaskTreePanel : UserControl
             //Controls_TaskTarget(jsonData.Data[TaskSerial].TaskTarget[i].Target,
             //    jsonData.Data[TaskSerial].TaskTarget[i].IsComplete,
             //    i);
-            //Debug.WriteLine("ÈÎÎñ¿¨Æ¬:µ±Ç°Ìí¼ÓÈÎÎñÌõÄ¿:" + i);
-            //Debug.WriteLine("ÈÎÎñ¿¨Æ¬:Ìí¼ÓÈÎÎñÌõÄ¿µÄÃû³Æ:" + MainWindow.instance.jsonData.Data[taskData.TaskSerial].TaskTarget[i].Target);
+            //Debug.WriteLine("ä»»åŠ¡å¡ç‰‡:å½“å‰æ·»åŠ ä»»åŠ¡æ¡ç›®:" + i);
+            //Debug.WriteLine("ä»»åŠ¡å¡ç‰‡:æ·»åŠ ä»»åŠ¡æ¡ç›®çš„åç§°:" + MainWindow.instance.jsonData.Data[taskData.TaskSerial].TaskTarget[i].Target);
         }
 
         TaskPanel.IsVisible = true;
         TaskPanelBackground.IsVisible = true;
     }
 
-    // ÈÎÎñ¿¨Æ¬ : ¹Ø±Õ°´Å¥
+    // ä»»åŠ¡å¡ç‰‡ : å…³é—­æŒ‰é’®
     private void Click_TaskPanelClose(object? sender, RoutedEventArgs e)
     {
         TaskPanel.IsVisible = false;
         TaskPanelBackground.IsVisible = false;
-        TaskTargetPanel.Children.Clear(); // Çå³ıÈÎÎñÌõÄ¿
+        TaskTargetPanel.Children.Clear(); // æ¸…é™¤ä»»åŠ¡æ¡ç›®
 
-        // ¹Ø±Õ¿¨Æ¬±à¼­Ä£Ê½
+        // å…³é—­å¡ç‰‡ç¼–è¾‘æ¨¡å¼
         EditMode = false;
         Edit_TaskPanelButton.Foreground = new SolidColorBrush(Colors.Black);
         TaskPanel.BorderBrush = new SolidColorBrush(Colors.LightGray);
 
-        TaskPanelTitle.IsVisible = true; // ÏÔÊ¾±êÌâ
+        TaskPanelTitle.IsVisible = true; // æ˜¾ç¤ºæ ‡é¢˜
         TaskPanelTitle_Edit.IsVisible = false;
 
-        New_TaskTarget.IsVisible = false; // Òş²ØÌí¼ÓĞÂÈÎÎñµÄ°´Å¥
+        New_TaskTarget.IsVisible = false; // éšè—æ·»åŠ æ–°ä»»åŠ¡çš„æŒ‰é’®
     }
 
-    // ÈÎÎñ¿¨Æ¬ : ±à¼­°´Å¥
+    // ä»»åŠ¡å¡ç‰‡ : ç¼–è¾‘æŒ‰é’®
     private void Click_TaskPanelEdit(object? sender, RoutedEventArgs e)
     {
         if (EditMode)
         {
             EditMode = false;
-            // ÉèÖÃ°´Å¥ÄÚÈİÑÕÉ«ÎªºÚÉ«
+            // è®¾ç½®æŒ‰é’®å†…å®¹é¢œè‰²ä¸ºé»‘è‰²
             Edit_TaskPanelButton.Foreground = new SolidColorBrush(Colors.Black);
             TaskPanel.BorderBrush = new SolidColorBrush(Colors.LightGray);
 
-            TaskPanelTitle.IsVisible = true; // ÏÔÊ¾±êÌâ
+            TaskPanelTitle.IsVisible = true; // æ˜¾ç¤ºæ ‡é¢˜
             TaskPanelTitle_Edit.IsVisible = false;
 
-            TaskTargetPanel.Children.Clear(); // Çå³ıÈÎÎñÌõÄ¿
-                                              // ÖØĞÂ¼ÓÔØ
+            TaskTargetPanel.Children.Clear(); // æ¸…é™¤ä»»åŠ¡æ¡ç›®
+                                              // é‡æ–°åŠ è½½
             for (int i = 0; i < jsonData.Tasks[OpenTaskSerial].TaskTarget.Count; i++)
             {
                 TaskTargetPanel.Children.Add(new TaskTarget()
@@ -585,23 +589,23 @@ public partial class TaskTreePanel : UserControl
                 //    i);
             }
 
-            // Òş²ØÌí¼ÓĞÂÈÎÎñµÄ°´Å¥
+            // éšè—æ·»åŠ æ–°ä»»åŠ¡çš„æŒ‰é’®
             New_TaskTarget.IsVisible = false;
         }
         else
         {
             EditMode = true;
-            // ÉèÖÃ°´Å¥ÄÚÈİÑÕÉ«ÎªÂÌÉ«
+            // è®¾ç½®æŒ‰é’®å†…å®¹é¢œè‰²ä¸ºç»¿è‰²
             Edit_TaskPanelButton.Foreground = new SolidColorBrush(Colors.Green);
             TaskPanel.BorderBrush = new SolidColorBrush(Colors.Green);
 
-            TaskPanelTitle.IsVisible = false; // Òş²Ø±êÌâ
-            TaskPanelTitle_Edit.Content = TaskPanelTitle.Text; // ¸³Óè±à¼­°´Å¥µÄÄÚÈİÎª
+            TaskPanelTitle.IsVisible = false; // éšè—æ ‡é¢˜
+            TaskPanelTitle_Edit.Content = TaskPanelTitle.Text; // èµ‹äºˆç¼–è¾‘æŒ‰é’®çš„å†…å®¹ä¸º
             TaskPanelTitle_Edit.IsVisible = true;
 
-            // ĞŞ¸ÄÈÎÎñÌõÄ¿ºóÃæµÄ°´Å¥ÎªĞŞ¸Ä°´Å¥
-            TaskTargetPanel.Children.Clear(); // Çå³ıÈÎÎñÌõÄ¿
-                                              // ÖØĞÂ¼ÓÔØ
+            // ä¿®æ”¹ä»»åŠ¡æ¡ç›®åé¢çš„æŒ‰é’®ä¸ºä¿®æ”¹æŒ‰é’®
+            TaskTargetPanel.Children.Clear(); // æ¸…é™¤ä»»åŠ¡æ¡ç›®
+                                              // é‡æ–°åŠ è½½
             for (int i = 0; i < jsonData.Tasks[OpenTaskSerial].TaskTarget.Count; i++)
             {
                 TaskTargetPanel.Children.Add(new TaskTarget()
@@ -613,19 +617,19 @@ public partial class TaskTreePanel : UserControl
                 //    i);
             }
 
-            // ÏÔÊ¾Ìí¼ÓĞÂÈÎÎñµÄ°´Å¥
+            // æ˜¾ç¤ºæ·»åŠ æ–°ä»»åŠ¡çš„æŒ‰é’®
             New_TaskTarget.IsVisible = true;
         }
     }
 
-    // È·ÈÏÍê³É : È¡Ïû°´Å¥
+    // ç¡®è®¤å®Œæˆ : å–æ¶ˆæŒ‰é’®
     private void Click_TaskSubmitConfirmationA(object? sender, RoutedEventArgs e)
     {
         SubmitConfirmation.IsVisible = false;
         TaskPanel.IsVisible = true;
         SubmitTaskListSerial = -1;
     }
-    // È·ÈÏÍê³É : È·¶¨°´Å¥
+    // ç¡®è®¤å®Œæˆ : ç¡®å®šæŒ‰é’®
     private void Click_TaskSubmitConfirmationB(object? sender, RoutedEventArgs e)
     {
         if (SubmitTaskListSerial >= 0)
@@ -643,7 +647,7 @@ public partial class TaskTreePanel : UserControl
             }
             else
             {
-                // ÒÆ³ıµ±Ç°ÔªËØ
+                // ç§»é™¤å½“å‰å…ƒç´ 
                 jsonData.Tasks[OpenTaskSerial].TaskTarget.RemoveAt(SubmitTaskListSerial);
             }
         }
@@ -651,8 +655,8 @@ public partial class TaskTreePanel : UserControl
         SubmitConfirmation.IsVisible = false;
         TaskPanel.IsVisible = true;
 
-        TaskTargetPanel.Children.Clear(); // Çå³ıÈÎÎñÌõÄ¿
-                                          // ÖØĞÂ¼ÓÔØ
+        TaskTargetPanel.Children.Clear(); // æ¸…é™¤ä»»åŠ¡æ¡ç›®
+                                          // é‡æ–°åŠ è½½
         for (int i = 0; i < jsonData.Tasks[OpenTaskSerial].TaskTarget.Count; i++)
         {
             TaskTargetPanel.Children.Add(new TaskTarget()
@@ -666,7 +670,7 @@ public partial class TaskTreePanel : UserControl
         SubmitTaskListSerial = -1;
     }
 
-    // ´ò¿ªÈ·ÈÏÍê³É/ÈÎÎñĞŞ¸ÄµÄ½çÃæ
+    // æ‰“å¼€ç¡®è®¤å®Œæˆ/ä»»åŠ¡ä¿®æ”¹çš„ç•Œé¢
     public void OpenTargetPlane(int ListSerial)
     {
         SubmitTaskListSerial = ListSerial;
@@ -683,7 +687,7 @@ public partial class TaskTreePanel : UserControl
         }
     }
 
-    // ´ò¿ªÉ¾³ıÈ·ÈÏµÄ½çÃæ
+    // æ‰“å¼€åˆ é™¤ç¡®è®¤çš„ç•Œé¢
     public void OpenTargetDelPlane(int ListSerial)
     {
         SubmitTaskListSerial = ListSerial;
@@ -692,47 +696,43 @@ public partial class TaskTreePanel : UserControl
     }
 
     /// <summary>
-    /// ¼ÓÔØÈÎÎñÊ÷Í¼,×¢Òâ:´Ë·½·¨»áÇå¿ÕËùÓĞÄÚÈİºóÖØĞÂÉú³É
+    /// åŠ è½½ä»»åŠ¡æ ‘å›¾,æ³¨æ„:æ­¤æ–¹æ³•ä¼šæ¸…ç©ºæ‰€æœ‰å†…å®¹åé‡æ–°ç”Ÿæˆ
     /// </summary>
     public void TaskTreePanelUpdate()
     {
-        // Çå³ıÈÎÎñÊ÷/Ö¸ÏòÏßÃæ°åÀïµÄËùÓĞÄÚÈİ
+        // æ¸…é™¤ ä»»åŠ¡æ ‘/æŒ‡å‘çº¿/å³é”®èœå• å®¹å™¨é‡Œçš„æ‰€æœ‰å†…å®¹
         TaskTreeGrid.Children.Clear();
         DirectionLineGrid.Children.Clear();
-        // ¶ÁÈ¡»ù±¾ĞÅÏ¢
-        if (jsonData.Panel != null)
-        {
-            TaskTreeGrid.Height = jsonData.Panel.Height;
-            TaskTreeGrid.Width = jsonData.Panel.Width;
-        }
+        MenuLtemGrid.Children.Clear();
+        // è¯»å–åŸºæœ¬ä¿¡æ¯
+        TaskTreeGrid.Height = TaskTreeData.jsonData.Panel.Height;
+        TaskTreeGrid.Width = TaskTreeData.jsonData.Panel.Width;
 
-        // ¶ÁÈ¡ÈÎÎñ£¬Éú³ÉÍ¼±ê
-        if (jsonData.Tasks != null)
+
+        // è¯»å–ä»»åŠ¡ï¼Œç”Ÿæˆå›¾æ ‡
+        //Debug.WriteLine("ä»»åŠ¡åˆ—è¡¨:");
+        foreach (var task in TaskTreeData.jsonData.Tasks)
         {
-            //Debug.WriteLine("ÈÎÎñÁĞ±í:");
-            foreach (var task in jsonData.Tasks)
+            ////Debug.WriteLine($"TaskSerial: {task.TaskSerial}, Width: {task.Width}, Height: {task.Height}");
+            //task.Value.taskIcon = new TaskIcon(new Thickness(task.Value.Width, task.Value.Height, 0, 0), task.Value.TaskSerial);
+            task.Value.taskIcon = new TaskIcon
             {
-                ////Debug.WriteLine($"TaskSerial: {task.TaskSerial}, Width: {task.Width}, Height: {task.Height}");
-                //task.Value.taskIcon = new TaskIcon(new Thickness(task.Value.Width, task.Value.Height, 0, 0), task.Value.TaskSerial);
-                task.Value.taskIcon = new TaskIcon
-                {
-                    TaskSerial = task.Value.TaskSerial,
-                    thickness = new Thickness(task.Value.Width, task.Value.Height, 0, 0)
-                };
-                // Ìí¼Óµ½ÈİÆ÷ÄÚ²¢³õÊ¼»¯
-                TaskTreeGrid.Children.Add(task.Value.taskIcon);
-                task.Value.taskIcon.Init();
+                TaskSerial = task.Value.TaskSerial,
+                thickness = new Thickness(task.Value.Width, task.Value.Height, 0, 0)
+            };
+            // æ·»åŠ åˆ°å®¹å™¨å†…å¹¶åˆå§‹åŒ–
+            TaskTreeGrid.Children.Add(task.Value.taskIcon);
+            task.Value.taskIcon.Init();
                 
-            }
         }
-        // Éú³ÉÖ¸ÏòÏß
-        foreach (var a in jsonData.Tasks)
+        // ç”ŸæˆæŒ‡å‘çº¿
+        foreach (var a in TaskTreeData.jsonData.Tasks)
         {
-            foreach (var b in jsonData.Tasks[a.Key].TaskTargetLine)
+            foreach (var b in TaskTreeData.jsonData.Tasks[a.Key].TaskTargetLine)
             {
-                DirectionLine line = new DirectionLine(jsonData.Tasks[a.Key], jsonData.Tasks[b]);
-                jsonData.Tasks[a.Key].taskIcon.directionLines.Add(line);
-                jsonData.Tasks[b].taskIcon.directionLines.Add(line);
+                DirectionLine line = new DirectionLine(TaskTreeData.jsonData.Tasks[a.Key], TaskTreeData.jsonData.Tasks[b]);
+                TaskTreeData.jsonData.Tasks[a.Key].taskIcon.directionLines.Add(line);
+                TaskTreeData.jsonData.Tasks[b].taskIcon.directionLines.Add(line);
             }
         }
 

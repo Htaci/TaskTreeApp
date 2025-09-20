@@ -1,4 +1,4 @@
-using Avalonia;
+Ôªøusing Avalonia;
 using System;
 using System.Threading.Tasks;
 
@@ -12,8 +12,8 @@ namespace TaskTree
         [STAThread]
         public static void Main(string[] args)
         {
-            // º”‘ÿ ˝æ›
-            Task.Run(() => TaskTreeData.TaskTreeData_initialization());
+            // Âä†ËΩΩËµÑÊ∫ê
+            TaskTreeData.TaskTreeData_initialization();
 
             BuildAvaloniaApp()
                 .StartWithClassicDesktopLifetime(args);

@@ -24,5 +24,13 @@
 
   <ItemGroup>
     <Folder Include="Assets\Fonts\" />
+    <Folder Include="Assets\Image\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Assets\Fonts\FluentSystemIcons-Regular.ttf" />
+    <Resource Include="Assets\Fonts\FluentSystemIcons-Regular.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 </Project>

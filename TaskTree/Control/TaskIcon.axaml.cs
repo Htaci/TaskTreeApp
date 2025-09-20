@@ -20,42 +20,42 @@ namespace TaskTree;
 public partial class TaskIcon : UserControl
 {
     /// <summary>
-    /// ÈÎÎñ±àºÅ
+    /// ä»»åŠ¡ç¼–å·
     /// </summary>
     public int TaskSerial { get; set; }
     /// <summary>
-    /// Ö¸ÏòÏßÁĞ±í
+    /// æŒ‡å‘çº¿åˆ—è¡¨
     /// </summary>
     public List<DirectionLine> directionLines = new List<DirectionLine>();
 
     /// <summary>
-    /// ÓÒ¼ü²Ëµ¥
+    /// å³é”®èœå•
     /// </summary>
     public ContextMenu contextMenu;
 
     //public Border Taskborder;
     /// <summary>
-    /// ÈÎÎñÍ¼±êµÄ×ø±ê
+    /// ä»»åŠ¡å›¾æ ‡çš„åæ ‡
     /// </summary>
     public Thickness thickness { get; set; }
 
     public TaskIcon()
     {
         InitializeComponent();
-        // ×èÖ¹ÊÂ¼şÃ°Åİ
+        // é˜»æ­¢äº‹ä»¶å†’æ³¡
         Taskborder.PointerPressed += (s, e) => e.Handled = true;
     }
     /// <summary>
-    /// ³õÊ¼»¯
+    /// åˆå§‹åŒ–
     /// </summary>
     public void Init()
     {
-        // ÉèÖÃUserControlµÄMargin
+        // è®¾ç½®UserControlçš„Margin
         this.Margin = thickness;
-        //Debug.WriteLine($"ÈÎÎñ£º{TaskSerial}£¬×ø±ê£º{Margin}");
+        //Debug.WriteLine($"ä»»åŠ¡ï¼š{TaskSerial}ï¼Œåæ ‡ï¼š{Margin}");
 
         bool IsTaskComplete = true;
-        // ÅĞ¶Ï´ËÈÎÎñÊÇ·ñÍê³É£¬Èç¹ûÃ»ÓĞÈÎÎñÌõÄ¿ÔòÄ¬ÈÏÃ»ÓĞÍê³É
+        // åˆ¤æ–­æ­¤ä»»åŠ¡æ˜¯å¦å®Œæˆï¼Œå¦‚æœæ²¡æœ‰ä»»åŠ¡æ¡ç›®åˆ™é»˜è®¤æ²¡æœ‰å®Œæˆ
         if (TaskTreePanel.instance?.jsonData.Tasks[TaskSerial].TaskTarget.Count > 0)
         {
             foreach (var task in TaskTreePanel.instance?.jsonData.Tasks[TaskSerial].TaskTarget)
@@ -71,7 +71,7 @@ public partial class TaskIcon : UserControl
         {
             IsTaskComplete = false;
         }
-        // ¸ù¾İÈÎÎñÊÇ·ñÍê³ÉÉèÖÃÑÕÉ«
+        // æ ¹æ®ä»»åŠ¡æ˜¯å¦å®Œæˆè®¾ç½®é¢œè‰²
         if (IsTaskComplete)
             Taskborder.BorderBrush = new SolidColorBrush(Colors.Green);
         else
@@ -84,9 +84,9 @@ public partial class TaskIcon : UserControl
 
     private void Button_Icon(object? sender, PointerPressedEventArgs e)
     {
-        Debug.WriteLine($"ÈÎÎñID£º{TaskSerial}£¬±»µã»÷");
+        Debug.WriteLine($"ä»»åŠ¡IDï¼š{TaskSerial}ï¼Œè¢«ç‚¹å‡»");
 
-        // ¼ì²éÊÇ·ñÒÑ¾­ÓĞÁËÓÒ¼ü²Ëµ¥
+        // æ£€æŸ¥æ˜¯å¦å·²ç»æœ‰äº†å³é”®èœå•
         if (TaskTreePanel.instance._contextMenu != null)
         {
             TaskTreePanel.instance.MainPanel.Children.Remove(TaskTreePanel.instance._contextMenu);
@@ -94,9 +94,9 @@ public partial class TaskIcon : UserControl
         }
 
         var point = e.GetCurrentPoint(sender as Control);
-        if (point.Properties.IsLeftButtonPressed)   // ×ó¼üµã»÷
+        if (point.Properties.IsLeftButtonPressed)   // å·¦é”®ç‚¹å‡»
         {
-            Debug.WriteLine("×ó¼ü±»°´ÏÂ");
+            Debug.WriteLine("å·¦é”®è¢«æŒ‰ä¸‹");
 
 
 
@@ -104,68 +104,68 @@ public partial class TaskIcon : UserControl
             {
                 TaskData taskData = TaskTreePanel.instance.jsonData.Tasks[TaskSerial];
                 //MainWindow.instance.OpenTaskPlanel(taskData);
-                Debug.WriteLine($"ÈÎÎñID£º{TaskSerial} ´¥·¢ÈÎÎñ£º´ò¿ªÈÎÎñÃæ°å");
+                Debug.WriteLine($"ä»»åŠ¡IDï¼š{TaskSerial} è§¦å‘ä»»åŠ¡ï¼šæ‰“å¼€ä»»åŠ¡é¢æ¿");
                 TaskTreePanel.instance.OpenTaskPlanel(TaskSerial);
             }
 
-            // Èç¹ûÊÇÕıÔÚÁ¬½Ó×´Ì¬ , ÇÒ¸ÃÍ¼±ê²»ÊÇ·¢ÆğÈÎÎñµÄÍ¼±êÊ±, ´¥·¢Á¬½Ó
+            // å¦‚æœæ˜¯æ­£åœ¨è¿æ¥çŠ¶æ€ , ä¸”è¯¥å›¾æ ‡ä¸æ˜¯å‘èµ·ä»»åŠ¡çš„å›¾æ ‡æ—¶, è§¦å‘è¿æ¥
             if (TaskTreePanel.instance.isConnectionStatus && TaskTreePanel.instance.connectionTaskSerial.TaskSerial != TaskSerial)
             {
-                // Çå³ıÔ¤ÀÀ
+                // æ¸…é™¤é¢„è§ˆ
                 TaskTreePanel.instance.previewDirectionLine.RemoveDirectionLine();
                 TaskTreePanel.instance.previewDirectionLine = null;
                 TaskTreePanel.instance.isConnectionStatus = false;
-                // ´´½¨Ò»¸öĞÂµÄÖ¸ÏòÏß
+                // åˆ›å»ºä¸€ä¸ªæ–°çš„æŒ‡å‘çº¿
                 DirectionLine line = new DirectionLine(TaskTreePanel.instance.jsonData.Tasks[TaskTreePanel.instance.connectionTaskSerial.TaskSerial], TaskTreePanel.instance.jsonData.Tasks[TaskSerial]);
                 directionLines.Add(line);
                 TaskTreePanel.instance.connectionTaskSerial.directionLines.Add(line);
-                // Ìí¼Óµ½json
+                // æ·»åŠ åˆ°json
                 TaskTreePanel.instance.jsonData.Tasks[TaskTreePanel.instance.connectionTaskSerial.TaskSerial].TaskTargetLine.Add(TaskSerial);
-                Debug.WriteLine($"¿ªÊ¼ÈÎÎñ{TaskTreePanel.instance.connectionTaskSerial.TaskSerial}µÄÖ¸ÏòÏßÁĞ±íÓĞ{TaskTreePanel.instance.connectionTaskSerial.directionLines.Count}¸ö");
-                Debug.WriteLine($"±»Ö¸ÏòÈÎÎñ{TaskSerial}µÄÖ¸ÏòÏßÁĞ±íÓĞ{directionLines.Count}¸ö");
-                // ÖØÖÃÈÎÎñ
+                Debug.WriteLine($"å¼€å§‹ä»»åŠ¡{TaskTreePanel.instance.connectionTaskSerial.TaskSerial}çš„æŒ‡å‘çº¿åˆ—è¡¨æœ‰{TaskTreePanel.instance.connectionTaskSerial.directionLines.Count}ä¸ª");
+                Debug.WriteLine($"è¢«æŒ‡å‘ä»»åŠ¡{TaskSerial}çš„æŒ‡å‘çº¿åˆ—è¡¨æœ‰{directionLines.Count}ä¸ª");
+                // é‡ç½®ä»»åŠ¡
                 TaskTreePanel.instance.connectionTaskSerial = null;
             }
 
 
         }
-        if (point.Properties.IsRightButtonPressed)  // ÓÒ¼üµã»÷
+        if (point.Properties.IsRightButtonPressed)  // å³é”®ç‚¹å‡»
         {
-            Debug.WriteLine("ÓÒ¼ü±»°´ÏÂ£¨Í¼±ê£©");
+            Debug.WriteLine("å³é”®è¢«æŒ‰ä¸‹ï¼ˆå›¾æ ‡ï¼‰");
 
 
 
-            ´´½¨ÓÒ¼ü²Ëµ¥(e.GetPosition(TaskTreePanel.instance));
+            åˆ›å»ºå³é”®èœå•(e.GetPosition(TaskTreePanel.instance));
         }
 
         
     }
 
-    public void ´´½¨ÓÒ¼ü²Ëµ¥(Point point)
+    public void åˆ›å»ºå³é”®èœå•(Point point)
     {
-        // ¼ì²éÊÇ·ñÒÑ¾­ÓĞÁËÓÒ¼ü²Ëµ¥
+        // æ£€æŸ¥æ˜¯å¦å·²ç»æœ‰äº†å³é”®èœå•
         if (TaskTreePanel.instance?._contextMenu != null)
         {
             TaskTreePanel.instance.MainPanel.Children.Remove(TaskTreePanel.instance._contextMenu);
             TaskTreePanel.instance._contextMenu = null;
         }
-        var ÓÒ¼ü²Ëµ¥Ñ¡Ïî = new MenuItem
+        var å³é”®èœå•é€‰é¡¹ = new MenuItem
         {
-            Header = "Á¬½ÓÈÎÎñ",
+            Header = "è¿æ¥ä»»åŠ¡",
         };
-        var ÓÒ¼ü²Ëµ¥Ñ¡Ïî2 = new MenuItem
+        var å³é”®èœå•é€‰é¡¹2 = new MenuItem
         {
-            Header = "ÒÆ¶¯Î»ÖÃ",
+            Header = "ç§»åŠ¨ä½ç½®",
         };
-        var ÓÒ¼ü²Ëµ¥Ñ¡Ïî3 = new MenuItem
+        var å³é”®èœå•é€‰é¡¹3 = new MenuItem
         {
-            Header = "É¾³ıÈÎÎñ",
+            Header = "åˆ é™¤ä»»åŠ¡",
         };
-        // °ó¶¨µã»÷ÊÂ¼ş
-        ÓÒ¼ü²Ëµ¥Ñ¡Ïî.Click += OnÁ¬½ÓÈÎÎñClicked;
-        ÓÒ¼ü²Ëµ¥Ñ¡Ïî2.Click += OnÒÆ¶¯ÈÎÎñClicked;
-        ÓÒ¼ü²Ëµ¥Ñ¡Ïî3.Click += OnÉ¾³ıÈÎÎñClicked;
-        var ÓÒ¼ü²Ëµ¥ = new ContextMenu
+        // ç»‘å®šç‚¹å‡»äº‹ä»¶
+        å³é”®èœå•é€‰é¡¹.Click += Onè¿æ¥ä»»åŠ¡Clicked;
+        å³é”®èœå•é€‰é¡¹2.Click += Onç§»åŠ¨ä»»åŠ¡Clicked;
+        å³é”®èœå•é€‰é¡¹3.Click += Onåˆ é™¤ä»»åŠ¡Clicked;
+        var å³é”®èœå• = new ContextMenu
         {
             HorizontalAlignment = HorizontalAlignment.Left,
             VerticalAlignment = VerticalAlignment.Top,
@@ -173,26 +173,26 @@ public partial class TaskIcon : UserControl
             Width = 150,
 
         };
-        ÓÒ¼ü²Ëµ¥.Items.Add(ÓÒ¼ü²Ëµ¥Ñ¡Ïî);
-        ÓÒ¼ü²Ëµ¥.Items.Add(ÓÒ¼ü²Ëµ¥Ñ¡Ïî2);
-        ÓÒ¼ü²Ëµ¥.Items.Add(ÓÒ¼ü²Ëµ¥Ñ¡Ïî3);
+        å³é”®èœå•.Items.Add(å³é”®èœå•é€‰é¡¹);
+        å³é”®èœå•.Items.Add(å³é”®èœå•é€‰é¡¹2);
+        å³é”®èœå•.Items.Add(å³é”®èœå•é€‰é¡¹3);
 
 
-        TaskTreePanel.instance.MainPanel.Children.Add(ÓÒ¼ü²Ëµ¥);
-        TaskTreePanel.instance._contextMenu = ÓÒ¼ü²Ëµ¥;
+        TaskTreePanel.instance.MainPanel.Children.Add(å³é”®èœå•);
+        TaskTreePanel.instance._contextMenu = å³é”®èœå•;
 
-        // ×èÖ¹ÊÂ¼şÃ°Åİ
-        ÓÒ¼ü²Ëµ¥.PointerPressed += (s, e) => e.Handled = true;
+        // é˜»æ­¢äº‹ä»¶å†’æ³¡
+        å³é”®èœå•.PointerPressed += (s, e) => e.Handled = true;
     }
 
-    private void OnÁ¬½ÓÈÎÎñClicked(object? sender, RoutedEventArgs e)
+    private void Onè¿æ¥ä»»åŠ¡Clicked(object? sender, RoutedEventArgs e)
     {
-        // ÔÚÕâÀï´¦Àíµã»÷ÊÂ¼ş
-        Debug.WriteLine("Á¬½ÓÈÎÎñ´¥·¢");
+        // åœ¨è¿™é‡Œå¤„ç†ç‚¹å‡»äº‹ä»¶
+        Debug.WriteLine("è¿æ¥ä»»åŠ¡è§¦å‘");
         TaskTreePanel.instance.connectionTaskSerial = this;
         TaskTreePanel.instance.isConnectionStatus = true;
 
-        // ¼ì²éÊÇ·ñÒÑ¾­ÓĞÁËÓÒ¼ü²Ëµ¥
+        // æ£€æŸ¥æ˜¯å¦å·²ç»æœ‰äº†å³é”®èœå•
         if (TaskTreePanel.instance?._contextMenu != null)
         {
             TaskTreePanel.instance.MainPanel.Children.Remove(TaskTreePanel.instance._contextMenu);
@@ -200,15 +200,15 @@ public partial class TaskIcon : UserControl
         }
     }
 
-    private void OnÒÆ¶¯ÈÎÎñClicked(object? sender, RoutedEventArgs e)
+    private void Onç§»åŠ¨ä»»åŠ¡Clicked(object? sender, RoutedEventArgs e)
     {
-        // ÔÚÕâÀï´¦Àíµã»÷ÊÂ¼ş
-        // Òş²Ø¸Ã¿Ø¼ş
+        // åœ¨è¿™é‡Œå¤„ç†ç‚¹å‡»äº‹ä»¶
+        // éšè—è¯¥æ§ä»¶
         Taskborder.IsVisible = false;
-        // ´´½¨Ò»¸öĞÂµÄÔ¤ÀÀÍ¼±ê
+        // åˆ›å»ºä¸€ä¸ªæ–°çš„é¢„è§ˆå›¾æ ‡
         new TaskIconPreview(TaskTreePanel.instance.jsonData.Tasks[TaskSerial]);
 
-        // ¼ì²éÊÇ·ñÒÑ¾­ÓĞÁËÓÒ¼ü²Ëµ¥
+        // æ£€æŸ¥æ˜¯å¦å·²ç»æœ‰äº†å³é”®èœå•
         if (TaskTreePanel.instance?._contextMenu != null)
         {
             TaskTreePanel.instance.MainPanel.Children.Remove(TaskTreePanel.instance._contextMenu);
@@ -216,28 +216,28 @@ public partial class TaskIcon : UserControl
         }
     }
 
-    private void OnÉ¾³ıÈÎÎñClicked(object? sender, RoutedEventArgs e)
+    private void Onåˆ é™¤ä»»åŠ¡Clicked(object? sender, RoutedEventArgs e)
     {
-        TaskTreePanel.instance.DeleteTask(TaskSerial);
+        TaskTreeData.DeleteTask(TaskSerial);
 
-        // ¼ì²éÊÇ·ñÒÑ¾­ÓĞÁËÓÒ¼ü²Ëµ¥
+        // æ£€æŸ¥æ˜¯å¦å·²ç»æœ‰äº†å³é”®èœå•
         if (TaskTreePanel.instance?._contextMenu != null)
         {
             TaskTreePanel.instance.MainPanel.Children.Remove(TaskTreePanel.instance._contextMenu);
             TaskTreePanel.instance._contextMenu = null;
         }
     }
-    // Êó±ê½øÈëÊ±
+    // é¼ æ ‡è¿›å…¥æ—¶
     private void Border_PointerEnter(object? sender, PointerEventArgs e)
     {
-        // ÉèÖÃÊó±êÖ¸ÕëÎªÊÖĞÍÍ¼±ê
+        // è®¾ç½®é¼ æ ‡æŒ‡é’ˆä¸ºæ‰‹å‹å›¾æ ‡
         TaskTreePanel.instance.Cursor = new Cursor(StandardCursorType.Hand);
 
-        // Èç¹ûÊÇÕıÔÚÁ¬½Ó×´Ì¬ , ÇÒ¸ÃÍ¼±ê²»ÊÇ·¢ÆğÈÎÎñµÄÍ¼±ê
+        // å¦‚æœæ˜¯æ­£åœ¨è¿æ¥çŠ¶æ€ , ä¸”è¯¥å›¾æ ‡ä¸æ˜¯å‘èµ·ä»»åŠ¡çš„å›¾æ ‡
         if (TaskTreePanel.instance.isConnectionStatus && TaskTreePanel.instance.connectionTaskSerial.TaskSerial != TaskSerial)
         {
             DirectionLine directionLine = new DirectionLine(TaskTreePanel.instance.jsonData.Tasks[TaskTreePanel.instance.connectionTaskSerial.TaskSerial], TaskTreePanel.instance.jsonData.Tasks[TaskSerial]);
-            directionLine.¶¯»­ = true;
+            directionLine.åŠ¨ç”» = true;
             directionLine.StartAsyncTask();
 
             TaskTreePanel.instance.previewDirectionLine = directionLine;
@@ -245,53 +245,53 @@ public partial class TaskIcon : UserControl
 
         foreach (var s in directionLines)
         {
-            s.¶¯»­ = true;
+            s.åŠ¨ç”» = true;
             s.StartAsyncTask();
         }
     }
-    // Êó±êÀë¿ªÊ±
+    // é¼ æ ‡ç¦»å¼€æ—¶
     private void Border_PointerLeave(object? sender, PointerEventArgs e)
     {
-        // »Ö¸´Ä¬ÈÏÊó±êÖ¸Õë
+        // æ¢å¤é»˜è®¤é¼ æ ‡æŒ‡é’ˆ
         TaskTreePanel.instance.Cursor = new Cursor(StandardCursorType.Arrow);
 
-        // Èç¹ûÊÇÕıÔÚÁ¬½Ó×´Ì¬ , ÇÒ¸ÃÍ¼±ê²»ÊÇ·¢ÆğÈÎÎñµÄÍ¼±ê
+        // å¦‚æœæ˜¯æ­£åœ¨è¿æ¥çŠ¶æ€ , ä¸”è¯¥å›¾æ ‡ä¸æ˜¯å‘èµ·ä»»åŠ¡çš„å›¾æ ‡
         if (TaskTreePanel.instance.isConnectionStatus && TaskTreePanel.instance.connectionTaskSerial.TaskSerial != TaskSerial)
         {
-            //MainWindow.instance.previewDirectionLine.¶¯»­ = false;
+            //MainWindow.instance.previewDirectionLine.åŠ¨ç”» = false;
             TaskTreePanel.instance.previewDirectionLine.RemoveDirectionLine();
             TaskTreePanel.instance.previewDirectionLine = null;
         }
 
         foreach (var s in directionLines)
         {
-            s.¶¯»­ = false;
+            s.åŠ¨ç”» = false;
         }
     }
-    // Ë¢ĞÂÈÎÎñÖ¸ÏòÏß
-    public void Ë¢ĞÂÈÎÎñÖ¸ÏòÏß()
+    // åˆ·æ–°ä»»åŠ¡æŒ‡å‘çº¿
+    public void åˆ·æ–°ä»»åŠ¡æŒ‡å‘çº¿()
     {
         foreach (var s in directionLines)
         {
-            // É¾³ıÖ¸ÏòÏß×ÔÉí
+            // åˆ é™¤æŒ‡å‘çº¿è‡ªèº«
             s.RemoveDirectionLine();
 
-            //Debug.WriteLine($"Ö¸ÏòÏß²âÊÔ£¬¿ªÊ¼µã£º{s.start.Width}/{s.start.Height}/ÈÎÎñ±àºÅ{s.start.TaskSerial}£¬" +
-            //    $"½áÊøµã£º{s.end.Width}/{s.end.Height}/ÈÎÎñ±àºÅ{s.end.TaskSerial}");
+            //Debug.WriteLine($"æŒ‡å‘çº¿æµ‹è¯•ï¼Œå¼€å§‹ç‚¹ï¼š{s.start.Width}/{s.start.Height}/ä»»åŠ¡ç¼–å·{s.start.TaskSerial}ï¼Œ" +
+            //    $"ç»“æŸç‚¹ï¼š{s.end.Width}/{s.end.Height}/ä»»åŠ¡ç¼–å·{s.end.TaskSerial}");
 
-            // ÖØĞÂÉú³ÉÖ¸ÏòÏß
+            // é‡æ–°ç”ŸæˆæŒ‡å‘çº¿
             s.NewDirectionLine();
         }
     }
 
-    public void Ë¢ĞÂÈÎÎñÍ¼±ê()
+    public void åˆ·æ–°ä»»åŠ¡å›¾æ ‡()
     {
         Taskborder.Margin = new Thickness(TaskTreePanel.instance.jsonData.Tasks[TaskSerial].Width,
             TaskTreePanel.instance.jsonData.Tasks[TaskSerial].Height, 0, 0);
 
 
         bool IsTaskComplete = true;
-        // ÅĞ¶Ï´ËÈÎÎñÊÇ·ñÍê³É£¬Èç¹ûÃ»ÓĞÈÎÎñÌõÄ¿ÔòÄ¬ÈÏÃ»ÓĞÍê³É
+        // åˆ¤æ–­æ­¤ä»»åŠ¡æ˜¯å¦å®Œæˆï¼Œå¦‚æœæ²¡æœ‰ä»»åŠ¡æ¡ç›®åˆ™é»˜è®¤æ²¡æœ‰å®Œæˆ
         if (TaskTreePanel.instance?.jsonData.Tasks[TaskSerial].TaskTarget.Count > 0)
         {
             foreach (var task in TaskTreePanel.instance?.jsonData.Tasks[TaskSerial].TaskTarget)
@@ -320,9 +320,9 @@ public partial class TaskIcon : UserControl
         Taskborder.BorderBrush = color;
     }
 
-    public void É¾³ıÈÎÎñÍ¼±ê()
+    public void åˆ é™¤ä»»åŠ¡å›¾æ ‡()
     {
-        Debug.WriteLine($"ÈÎÎñ£º{TaskSerial} ±»É¾³ı");
+        Debug.WriteLine($"ä»»åŠ¡ï¼š{TaskSerial} è¢«åˆ é™¤");
 
         for (int i = directionLines.Count - 1; i >= 0; i--)
         {

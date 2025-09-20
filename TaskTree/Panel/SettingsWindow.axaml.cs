@@ -11,7 +11,7 @@ public partial class SettingsWindow : Window
     {
         InitializeComponent();
 
-        // ×îĞ¡»¯£¬×î´ó»¯£¬¹Ø±Õ´°¿Ú
+        // æœ€å°åŒ–ï¼Œæœ€å¤§åŒ–ï¼Œå…³é—­çª—å£
         this.FindControl<Button>("Minimize").Click += (s, e) => this.WindowState = WindowState.Minimized;
         this.FindControl<Button>("Maximize").Click += (s, e) =>
         {
@@ -28,7 +28,7 @@ public partial class SettingsWindow : Window
         };
         this.FindControl<Button>("Close").Click += (s, e) =>
         {
-            this.Close(); // ÍË³ö³ÌĞò
+            this.Close(); // é€€å‡ºç¨‹åº
         };
     }
     private void Form_OnDrag(object? sender, PointerPressedEventArgs e)

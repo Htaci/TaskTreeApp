@@ -8,8 +8,4 @@
 	<Application.Styles>
 		<semi:SemiTheme/>
 	</Application.Styles>
-
-	<Application.Resources>
-		<FontFamily x:Key="FluentSystemIcons">avares://TaskTree/Assets/Fonts/FluentSystemIcons-Regular.ttf#Fluent System Icons</FontFamily>
-	</Application.Resources>
 </Application>

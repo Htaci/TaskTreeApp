@@ -44,9 +44,31 @@
 								 VerticalAlignment="Center">
 
 				</HyperlinkButton>
-				<Button x:Name="Close" Classes="red" Content="&#xe8bb;" Background="Transparent" HorizontalAlignment="Right" VerticalAlignment="Top" FontFamily="Segoe Fluent Icons" Width="40" Height="35" Margin="0,5,5,0" />
-				<Button x:Name="Maximize" Content="&#xe922;" FontSize="16" Background="Transparent" FontFamily="Segoe Fluent Icons" HorizontalAlignment="Right" VerticalAlignment="Top" Width="42" Height="35" Margin="0,5,46,0"/>
-				<Button x:Name="Minimize" Content="&#xe921;" Background="Transparent" FontFamily="Segoe Fluent Icons" HorizontalAlignment="Right" VerticalAlignment="Top" Width="40" Height="35" Margin="0,5,88,0"/>
+				<Button x:Name="Close"
+				        Content="&#xe8bb;" 
+				        Background="Transparent" 
+				        FontFamily="Segoe Fluent Icons" 
+				        HorizontalAlignment="Right" 
+				        VerticalAlignment="Top"  
+				        Width="40" Height="35" 
+				        Margin="0,5,5,0" />
+				<Button x:Name="Maximize" 
+				        Content="&#xe922;" 
+				        FontSize="16" 
+				        Background="Transparent" 
+				        FontFamily="Segoe Fluent Icons" 
+				        HorizontalAlignment="Right" 
+				        VerticalAlignment="Top" 
+				        Width="42" Height="35" 
+				        Margin="0,5,46,0"/>
+				<Button x:Name="Minimize" 
+				        Content="&#xe921;" 
+				        Background="Transparent" 
+				        FontFamily="Segoe Fluent Icons" 
+				        HorizontalAlignment="Right" 
+				        VerticalAlignment="Top" 
+				        Width="40" Height="35" 
+				        Margin="0,5,88,0"/>
 				<Button x:Name="Refresh" 
 						Content="&#xe72C;" 
 						Background="Transparent" 
